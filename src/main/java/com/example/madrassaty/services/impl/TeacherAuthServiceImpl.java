@@ -3,56 +3,56 @@ package com.example.madrassaty.services.impl;
 import com.example.madrassaty.authenticators.TeacherAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.TeacherRegisterDTO;
-import com.example.madrassaty.dtos.response.JwtResponse;
+import com.example.madrassaty.dtos.response.AuthResponse;
 import com.example.madrassaty.enums.Role;
 import com.example.madrassaty.models.Teacher;
 import com.example.madrassaty.repositories.TeacherRepository;
+import com.example.madrassaty.services.CloudinaryService;
 import com.example.madrassaty.services.TeacherAuthService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class TeacherAuthServiceImpl implements TeacherAuthService {
 
-    private final TeacherDetailsService teacherDetailsService;
     private final TeacherRepository teacherRepository;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Override
-    public JwtResponse login(AuthRequestDTO authRequestDTO) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authRequestDTO.getEmail(),
-                        authRequestDTO.getPassword()
-                )
-        );
+    public AuthResponse login(AuthRequestDTO authRequestDTO) {
 
-        UserDetails teacher = teacherDetailsService.loadUserByUsername(authRequestDTO.getEmail());
-        String jwtToken = jwtService.generateToken(teacher);
-        JwtResponse jwtResponse = new JwtResponse();
-        jwtResponse.setToken(jwtToken);
-        return jwtResponse;
+        Teacher teacher = teacherRepository.findTeacherByEmail(authRequestDTO.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Email or password not valid"));
+
+        TeacherAuthenticator teacherAuthenticator = new TeacherAuthenticator(teacher);
+        String jwtToken = jwtService.generateToken(teacherAuthenticator);
+        AuthResponse authResponse = modelMapper.map(teacher, AuthResponse.class);
+        authResponse.setToken(jwtToken);
+        return authResponse;
     }
 
     @Override
-    public JwtResponse register(TeacherRegisterDTO teacherRegisterDTO) {
+    public AuthResponse register(TeacherRegisterDTO teacherRegisterDTO) throws IOException {
         Teacher teacher = modelMapper.map(teacherRegisterDTO, Teacher.class);
         teacher.setRole(Role.TEACHER);
         teacher.setPassword(passwordEncoder.encode(teacherRegisterDTO.getPassword()));
+        if (teacherRegisterDTO.getImage() != null) {
+            String imageUrl = cloudinaryService.uploadFile(teacherRegisterDTO.getImage());
+            teacher.setImage(imageUrl);
+        }
         teacherRepository.save(teacher);
         TeacherAuthenticator teacherAuthenticator = new TeacherAuthenticator(teacher);
         String jwtToken = jwtService.generateToken(teacherAuthenticator);
-        JwtResponse jwtResponse = new JwtResponse();
-        jwtResponse.setToken(jwtToken);
-        return jwtResponse;
+        AuthResponse authResponse = modelMapper.map(teacher, AuthResponse.class);
+        authResponse.setToken(jwtToken);
+        return authResponse;
     }
 }

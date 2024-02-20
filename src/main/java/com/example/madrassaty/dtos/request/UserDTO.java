@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -20,5 +21,6 @@ public abstract class UserDTO {
     private StatusType status;
     private String city;
     private String address;
+    private MultipartFile image;
 
 }

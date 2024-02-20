@@ -7,8 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -28,6 +27,7 @@ public abstract class User {
     private StatusType status;
     private String city;
     private String address;
+    private String image;
     @Enumerated(EnumType.STRING)
     private Role role;
 

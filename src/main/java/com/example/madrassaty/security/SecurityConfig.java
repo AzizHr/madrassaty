@@ -30,12 +30,12 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
-                                "/api/managers/login",
-                                "/api/students/login",
-                                "/api/teachers/login",
-                                "/api/managers/register",
-                                "/api/students/register",
-                                "/api/teachers/register"
+                                "/api/auth/manager/login",
+                                "/api/auth/manager/register",
+                                "/api/auth/student/login",
+                                "/api/auth/student/register",
+                                "/api/auth/teacher/login",
+                                "/api/auth/teacher/register"
                         )
                         .permitAll()
                         .requestMatchers("/api/managers/**").hasAuthority("MANAGER")

@@ -3,18 +3,21 @@ package com.example.madrassaty.services.impl;
 import com.example.madrassaty.authenticators.ManagerAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.ManagerRegisterDTO;
-import com.example.madrassaty.dtos.response.JwtResponse;
+import com.example.madrassaty.dtos.response.AuthResponse;
 import com.example.madrassaty.enums.Role;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Manager;
 import com.example.madrassaty.repositories.ManagerRepository;
 import com.example.madrassaty.repositories.SchoolRepository;
+import com.example.madrassaty.services.CloudinaryService;
 import com.example.madrassaty.services.ManagerAuthService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,31 +28,36 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Override
-    public JwtResponse login(AuthRequestDTO authRequestDTO) {
+    public AuthResponse login(AuthRequestDTO authRequestDTO) {
 
         Manager manager = managerRepository.findManagerByEmail(authRequestDTO.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException("Manager not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Email or password not valid"));
 
         ManagerAuthenticator authenticatedManager = new ManagerAuthenticator(manager);
         String jwtToken = jwtService.generateToken(authenticatedManager);
-        JwtResponse jwtResponse = new JwtResponse();
-        jwtResponse.setToken(jwtToken);
-        return jwtResponse;
+        AuthResponse authResponse = modelMapper.map(manager, AuthResponse.class);
+        authResponse.setToken(jwtToken);
+        return authResponse;
     }
 
     @Override
-    public JwtResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException {
+    public AuthResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException {
         Manager manager = modelMapper.map(managerRegisterDTO, Manager.class);
         manager.setRole(Role.MANAGER);
         manager.setSchool(schoolRepository.findById(1L).orElseThrow(() -> new NotFoundException("No school found")));
         manager.setPassword(passwordEncoder.encode(managerRegisterDTO.getPassword()));
+        if (managerRegisterDTO.getImage() != null) {
+            String imageUrl = cloudinaryService.uploadFile(managerRegisterDTO.getImage());
+            manager.setImage(imageUrl);
+        }
         managerRepository.save(manager);
         ManagerAuthenticator managerAuthenticator = new ManagerAuthenticator(manager);
         String jwtToken = jwtService.generateToken(managerAuthenticator);
-        JwtResponse jwtResponse = new JwtResponse();
-        jwtResponse.setToken(jwtToken);
-        return jwtResponse;
+        AuthResponse authResponse = modelMapper.map(manager, AuthResponse.class);
+        authResponse.setToken(jwtToken);
+        return authResponse;
     }
 }
