@@ -1,5 +1,8 @@
 package com.example.madrassaty.dtos.request;
 
+import com.example.madrassaty.enums.DurationType;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +16,15 @@ import java.time.LocalDate;
 public class AbsenceDTO {
 
     private long id;
-    private LocalDate date;
-    private String duration;
+    @NotNull(message = "duration is required")
+    private int duration;
+    private DurationType durationType;
+    @NotEmpty(message = "reason can't be empty")
+    @NotNull(message = "reason is required")
     private String reason;
+    @NotNull(message = "isJustified is required")
     private boolean isJustified;
+    @NotNull(message = "studentId is required")
     private long studentId;
 
 }

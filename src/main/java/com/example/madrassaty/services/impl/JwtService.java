@@ -1,8 +1,7 @@
 package com.example.madrassaty.services.impl;
 
-import com.example.madrassaty.authenticators.ManagerAuthenticator;
-import com.example.madrassaty.authenticators.StudentAuthenticator;
-import com.example.madrassaty.authenticators.TeacherAuthenticator;
+import com.example.madrassaty.security.authenticators.ManagerAuthenticator;
+import com.example.madrassaty.security.authenticators.StudentAuthenticator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

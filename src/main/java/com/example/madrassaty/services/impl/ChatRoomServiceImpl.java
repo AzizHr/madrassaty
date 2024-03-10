@@ -1,6 +1,5 @@
 package com.example.madrassaty.services.impl;
 
-import com.example.madrassaty.dtos.request.ChatRoomRequest;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.ChatRoom;
 import com.example.madrassaty.repositories.ChatRoomRepository;
@@ -8,6 +7,7 @@ import com.example.madrassaty.repositories.UserRepository;
 import com.example.madrassaty.services.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,23 +17,48 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final UserRepository userRepository;
 
     @Override
-    public String save(ChatRoomRequest chatRoomRequest) throws NotFoundException {
-        var chatId = String.format("%_%", chatRoomRequest.getSenderId(), chatRoomRequest.getReceiverId());
-        var chatName = String.format("chat_%_%", chatRoomRequest.getSenderId(), chatRoomRequest.getReceiverId());
-        ChatRoom senderChatRoom = new ChatRoom();
-        senderChatRoom.setId(chatId);
-        senderChatRoom.setName(chatName);
-        senderChatRoom.setSender(userRepository.findById(chatRoomRequest.getSenderId()).orElseThrow(() -> new NotFoundException("No user found")));
-        senderChatRoom.setReceiver(userRepository.findById(chatRoomRequest.getReceiverId()).orElseThrow(() -> new NotFoundException("No user found")));
+    public Optional<String> getChatRoomId(
+            long senderId,
+            long receiverId
+    ) throws NotFoundException {
+        if(chatRoomRepository.findBySenderIdAndReceiverId(senderId, receiverId).isPresent()) {
+            ChatRoom chatRoom = chatRoomRepository.findBySenderIdAndReceiverId(senderId, receiverId).get();
+            return Optional.of(chatRoom.getId());
+        } else {
+            return Optional.of(createChatId(senderId, receiverId));
+        }
+    }
 
-        ChatRoom receiverChatRoom = new ChatRoom();
-        receiverChatRoom.setId(chatId);
-        receiverChatRoom.setName(chatName);
-        receiverChatRoom.setSender(userRepository.findById(chatRoomRequest.getReceiverId()).orElseThrow(() -> new NotFoundException("No user found")));
-        receiverChatRoom.setReceiver(userRepository.findById(chatRoomRequest.getSenderId()).orElseThrow(() -> new NotFoundException("No user found")));
 
-        chatRoomRepository.save(senderChatRoom);
-        chatRoomRepository.save(receiverChatRoom);
+    @Override
+    public String createChatId(long senderId, long receiverId) throws NotFoundException {
+        var chatId = String.format("%s_%s", senderId, receiverId);
+
+        ChatRoom senderRecipient = ChatRoom
+                .builder()
+                .id(chatId)
+                .sender(userRepository.findById(senderId).orElseThrow(
+                        () -> new NotFoundException("No user found")
+                ))
+                .receiver(userRepository.findById(receiverId).orElseThrow(
+                        () -> new NotFoundException("No user found")
+                ))
+                .build();
+
+        ChatRoom recipientSender = ChatRoom
+                .builder()
+                .id(chatId)
+                .sender(userRepository.findById(receiverId).orElseThrow(
+                        () -> new NotFoundException("No user found")
+                ))
+                .receiver(userRepository.findById(senderId).orElseThrow(
+                        () -> new NotFoundException("No user found")
+                ))
+                .build();
+
+        chatRoomRepository.save(senderRecipient);
+        chatRoomRepository.save(recipientSender);
+
         return chatId;
     }
 }

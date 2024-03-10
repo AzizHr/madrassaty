@@ -1,4 +1,4 @@
-package com.example.madrassaty.authenticators;
+package com.example.madrassaty.security.authenticators;
 
 import com.example.madrassaty.models.Student;
 import lombok.AllArgsConstructor;

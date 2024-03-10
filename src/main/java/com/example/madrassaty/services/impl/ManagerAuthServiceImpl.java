@@ -1,6 +1,6 @@
 package com.example.madrassaty.services.impl;
 
-import com.example.madrassaty.authenticators.ManagerAuthenticator;
+import com.example.madrassaty.security.authenticators.ManagerAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.ManagerRegisterDTO;
 import com.example.madrassaty.dtos.response.AuthResponse;
@@ -11,7 +11,6 @@ import com.example.madrassaty.repositories.ManagerRepository;
 import com.example.madrassaty.repositories.SchoolRepository;
 import com.example.madrassaty.services.CloudinaryService;
 import com.example.madrassaty.services.ManagerAuthService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

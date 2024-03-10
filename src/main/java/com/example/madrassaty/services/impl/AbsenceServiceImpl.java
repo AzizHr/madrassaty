@@ -1,6 +1,7 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.AbsenceDTO;
+import com.example.madrassaty.dtos.response.AbsenceResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Absence;
 import com.example.madrassaty.models.Student;
@@ -11,6 +12,10 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class AbsenceServiceImpl implements AbsenceService {
@@ -20,26 +25,27 @@ public class AbsenceServiceImpl implements AbsenceService {
     private ModelMapper modelMapper;
 
     @Override
-    public Absence save(AbsenceDTO absenceDTO) throws NotFoundException {
+    public AbsenceResponse save(AbsenceDTO absenceDTO) throws NotFoundException {
 
         Absence absence = modelMapper.map(absenceDTO, Absence.class);
         if(studentRepository.findById(absenceDTO.getStudentId()).isPresent()) {
             Student student = studentRepository.findById(absenceDTO.getStudentId()).get();
+            absence.setDate(LocalDate.now());
             absence.setStudent(student);
-            return absenceRepository.save(absence);
+            return modelMapper.map(absenceRepository.save(absence), AbsenceResponse.class);
         }
         throw new NotFoundException("No student found");
     }
 
     @Override
-    public Absence update(AbsenceDTO absenceDTO) throws NotFoundException {
+    public AbsenceResponse update(AbsenceDTO absenceDTO) throws NotFoundException {
 
         Absence absence = modelMapper.map(absenceDTO, Absence.class);
         if(absenceRepository.findById(absenceDTO.getId()).isPresent()) {
             if(studentRepository.findById(absenceDTO.getStudentId()).isPresent()) {
                 Student student = studentRepository.findById(absenceDTO.getStudentId()).get();
                 absence.setStudent(student);
-                return absenceRepository.save(absence);
+                return modelMapper.map(absenceRepository.save(absence), AbsenceResponse.class);
             }
             throw new NotFoundException("No student found");
         }
@@ -55,10 +61,18 @@ public class AbsenceServiceImpl implements AbsenceService {
     }
 
     @Override
-    public Absence findById(long id) throws NotFoundException {
+    public AbsenceResponse findById(long id) throws NotFoundException {
         if(absenceRepository.findById(id).isPresent()) {
-            return absenceRepository.findById(id).get();
+            return modelMapper.map(absenceRepository.findById(id).get(), AbsenceResponse.class);
         }
         throw new NotFoundException("No absence found");
+    }
+
+    @Override
+    public List<AbsenceResponse> findAllByStudentId(long studentId) {
+        List<Absence> absences = absenceRepository.findAllByStudentId(studentId);
+        return absences.stream()
+                .map(absence -> modelMapper.map(absence, AbsenceResponse.class))
+                .collect(Collectors.toList());
     }
 }

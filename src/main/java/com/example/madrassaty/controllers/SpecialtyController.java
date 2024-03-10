@@ -1,13 +1,15 @@
 package com.example.madrassaty.controllers;
 
 import com.example.madrassaty.dtos.request.SpecialtyDTO;
+import com.example.madrassaty.dtos.response.SpecialtyResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
-import com.example.madrassaty.models.Specialty;
 import com.example.madrassaty.services.SpecialtyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/specialties")
@@ -17,27 +19,34 @@ public class SpecialtyController {
     private final SpecialtyService specialtyService;
 
     @PostMapping
-    public ResponseEntity<Specialty> save(
-            @RequestBody SpecialtyDTO specialtyDTO)
+    public ResponseEntity<SpecialtyResponse> save(
+            @Valid @RequestBody SpecialtyDTO specialtyDTO)
             throws NotFoundException {
         return new ResponseEntity<>
                 (specialtyService.save(specialtyDTO), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Specialty> update(
-            @RequestBody SpecialtyDTO specialtyDTO)
+    public ResponseEntity<SpecialtyResponse> update(
+            @Valid @RequestBody SpecialtyDTO specialtyDTO)
             throws NotFoundException {
         return new ResponseEntity<>
                 (specialtyService.update(specialtyDTO), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Specialty> specialty(
+    public ResponseEntity<SpecialtyResponse> specialty(
             @PathVariable long id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (specialtyService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/school/{schoolId}")
+    public ResponseEntity<List<SpecialtyResponse>> allBySchoolId(
+            @PathVariable long schoolId) {
+        return new ResponseEntity<>
+                (specialtyService.findAllBySchoolId(schoolId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

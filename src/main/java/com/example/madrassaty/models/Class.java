@@ -18,6 +18,8 @@ public class Class {
     @GeneratedValue
     private long id;
     private String name;
+    @ManyToOne
+    private School school;
     @OneToMany(mappedBy = "_class")
     private List<Student> students;
 }

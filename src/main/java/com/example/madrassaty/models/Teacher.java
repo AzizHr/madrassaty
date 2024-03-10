@@ -17,6 +17,4 @@ public class Teacher extends User {
 
     @ManyToOne
     private Subject subject;
-    @ManyToMany
-    private List<Class> classes;
 }

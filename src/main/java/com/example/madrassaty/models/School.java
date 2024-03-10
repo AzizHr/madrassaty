@@ -28,5 +28,7 @@ public class School {
     private List<Specialty> specialties;
     @OneToMany(mappedBy = "school")
     private List<Manager> managers;
+    @OneToMany(mappedBy = "school")
+    private List<Class> classes;
 
 }

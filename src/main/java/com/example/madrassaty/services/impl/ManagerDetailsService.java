@@ -1,6 +1,6 @@
 package com.example.madrassaty.services.impl;
 
-import com.example.madrassaty.authenticators.ManagerAuthenticator;
+import com.example.madrassaty.security.authenticators.ManagerAuthenticator;
 import com.example.madrassaty.repositories.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

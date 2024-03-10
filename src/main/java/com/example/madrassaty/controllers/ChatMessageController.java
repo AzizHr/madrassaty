@@ -1,9 +1,9 @@
 package com.example.madrassaty.controllers;
 
-import com.example.madrassaty.dtos.request.ChatMessageRequest;
+import com.example.madrassaty.dtos.request.ChatMessageDTO;
 import com.example.madrassaty.dtos.response.ChatMessageResponse;
-import com.example.madrassaty.exceptions.ChatRoomAlreadyExistsException;
 import com.example.madrassaty.exceptions.NotFoundException;
+import com.example.madrassaty.models.ChatNotification;
 import com.example.madrassaty.services.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +24,23 @@ public class ChatMessageController {
     private final ChatMessageService chatMessageService;
 
     @MessageMapping("/chat")
-    public void processMessage(
-            @Payload ChatMessageRequest chatMessageRequest
-    ) throws NotFoundException, ChatRoomAlreadyExistsException {
-        ChatMessageResponse chatMessage = chatMessageService.save(chatMessageRequest);
+    public void processMessage(@Payload ChatMessageDTO chatMessage) throws NotFoundException {
+        ChatMessageDTO savedMsg = chatMessageService.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
-                chatMessage.getReceiver().getFirstname(), "/queue/messages", null
+                String.valueOf(chatMessage.getReceiverId()), "/queue/messages",
+                new ChatNotification(
+                        savedMsg.getId(),
+                        savedMsg.getSenderId(),
+                        savedMsg.getReceiverId(),
+                        savedMsg.getContent()
+                )
         );
     }
 
-    @GetMapping("/messages/{senderId}/{receiverId}")
-    public ResponseEntity<List<ChatMessageResponse>> chatMessages(
-            @PathVariable long senderId,
-            @PathVariable long receiverId
-    ) {
-        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, receiverId));
+    @GetMapping("/api/messages/{senderId}/{receiverId}")
+    public ResponseEntity<List<ChatMessageResponse>> findChatMessages(@PathVariable long senderId,
+                                                                      @PathVariable long receiverId) {
+        return ResponseEntity
+                .ok(chatMessageService.findChatMessages(senderId, receiverId));
     }
-
 }

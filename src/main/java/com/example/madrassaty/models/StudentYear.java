@@ -17,9 +17,7 @@ public class StudentYear {
     @Id
     @GeneratedValue
     private long id;
-    @Temporal(TemporalType.DATE)
     private LocalDate startsAt;
-    @Temporal(TemporalType.DATE)
     private LocalDate endsAt;
     private String scholarYear;
     @ManyToOne

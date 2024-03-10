@@ -1,9 +1,11 @@
 package com.example.madrassaty.controllers;
 
 import com.example.madrassaty.dtos.request.ClassDTO;
+import com.example.madrassaty.dtos.response.ClassResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Class;
 import com.example.madrassaty.services.ClassService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +21,23 @@ public class ClassController {
 
 
     @PostMapping
-    public ResponseEntity<Class> save(
-            @RequestBody ClassDTO classDTO)
+    public ResponseEntity<ClassResponse> save(
+            @Valid @RequestBody ClassDTO classDTO)
             throws NotFoundException {
         return new ResponseEntity<>
                 (classService.save(classDTO), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Class> update(
-            @RequestBody ClassDTO classDTO)
+    public ResponseEntity<ClassResponse> update(
+            @Valid @RequestBody ClassDTO classDTO)
             throws NotFoundException {
         return new ResponseEntity<>
                 (classService.update(classDTO), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Class> aClass(
+    public ResponseEntity<ClassResponse> aClass(
             @PathVariable long id)
             throws NotFoundException {
         return new ResponseEntity<>
@@ -51,8 +53,20 @@ public class ClassController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Class>> classes() {
+    public ResponseEntity<List<ClassResponse>> classes() {
         return new ResponseEntity<>
                 (classService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/school/{schoolId}")
+    public ResponseEntity<List<ClassResponse>> allBySchoolId(@PathVariable long schoolId) {
+        return new ResponseEntity<>
+                (classService.findAllBySchoolId(schoolId), HttpStatus.OK);
+    }
+
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<ClassResponse>> allByTeacherId(@PathVariable long teacherId) {
+        return new ResponseEntity<>
+                (classService.findAllByTeacherId(teacherId), HttpStatus.OK);
     }
 }

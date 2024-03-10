@@ -1,21 +1,17 @@
 package com.example.madrassaty.dtos.response;
 
-import com.example.madrassaty.dtos.request.ChatRoomRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.time.LocalDate;
+import com.example.madrassaty.dtos.request.ChatRoomDTO;
+import lombok.*;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ChatMessageResponse {
     private long id;
     private String content;
-    private LocalDate createdAt;
-    private ChatRoomRequest chatRoom;
+    private ChatRoomDTO chatRoom;
     private UserResponse sender;
     private UserResponse receiver;
 }

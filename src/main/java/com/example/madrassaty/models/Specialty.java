@@ -23,7 +23,5 @@ public class Specialty {
     private School school;
     @OneToMany(mappedBy = "specialty")
     private List<Student> students;
-    @ManyToMany
-    private List<Subject> subjects;
 
 }

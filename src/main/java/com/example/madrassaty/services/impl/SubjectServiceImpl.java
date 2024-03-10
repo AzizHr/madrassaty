@@ -1,6 +1,7 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.SubjectDTO;
+import com.example.madrassaty.dtos.response.SubjectResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Subject;
 import com.example.madrassaty.repositories.SubjectRepository;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +20,16 @@ public class SubjectServiceImpl implements SubjectService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Subject save(SubjectDTO subjectDTO) {
+    public SubjectResponse save(SubjectDTO subjectDTO) {
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
-        return subjectRepository.save(subject);
+        return modelMapper.map(subjectRepository.save(subject), SubjectResponse.class);
     }
 
     @Override
-    public Subject update(SubjectDTO subjectDTO) throws NotFoundException {
+    public SubjectResponse update(SubjectDTO subjectDTO) throws NotFoundException {
         if(subjectRepository.findById(subjectDTO.getId()).isPresent()) {
             Subject subject = modelMapper.map(subjectDTO, Subject.class);
-            return subjectRepository.save(subject);
+            return modelMapper.map(subjectRepository.save(subject), SubjectResponse.class);
         }
         throw new NotFoundException("No subject found");
     }
@@ -41,15 +43,18 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject findById(long id) throws NotFoundException {
+    public SubjectResponse findById(long id) throws NotFoundException {
         if(subjectRepository.findById(id).isPresent()) {
-            return subjectRepository.findById(id).get();
+            return modelMapper.map(subjectRepository.findById(id).get(), SubjectResponse.class);
         }
         throw new NotFoundException("No subject found");
     }
 
     @Override
-    public List<Subject> findAllBySpecialtyId(long specialtyId) {
-        return null;
+    public List<SubjectResponse> findAllBySpecialtyId(long specialtyId) {
+        List<Subject> subjects = subjectRepository.findAllBySpecialtyId(specialtyId);
+        return subjects.stream()
+                .map(subject -> modelMapper.map(subject, SubjectResponse.class))
+                .collect(Collectors.toList());
     }
 }

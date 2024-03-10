@@ -1,6 +1,7 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.SchoolDTO;
+import com.example.madrassaty.dtos.response.SchoolResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.School;
 import com.example.madrassaty.repositories.SchoolRepository;
@@ -17,16 +18,16 @@ public class SchoolServiceImpl implements SchoolService {
     private final ModelMapper modelMapper;
 
     @Override
-    public School save(SchoolDTO schoolDTO) {
+    public SchoolResponse save(SchoolDTO schoolDTO) {
         School school = modelMapper.map(schoolDTO, School.class);
-        return schoolRepository.save(school);
+        return modelMapper.map(schoolRepository.save(school), SchoolResponse.class);
     }
 
     @Override
-    public School update(SchoolDTO schoolDTO) throws NotFoundException {
+    public SchoolResponse update(SchoolDTO schoolDTO) throws NotFoundException {
         if(schoolRepository.findById(schoolDTO.getId()).isPresent()) {
             School school = modelMapper.map(schoolDTO, School.class);
-            return schoolRepository.save(school);
+            return modelMapper.map(schoolRepository.save(school), SchoolResponse.class);
         }
         throw new NotFoundException("No school found");
     }
@@ -40,9 +41,17 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public School findById(long id) throws NotFoundException {
+    public SchoolResponse findById(long id) throws NotFoundException {
         if(schoolRepository.findById(id).isPresent()) {
-            return schoolRepository.findById(id).get();
+            return modelMapper.map(schoolRepository.findById(id).get(), SchoolResponse.class);
+        }
+        throw new NotFoundException("No school found");
+    }
+
+    @Override
+    public SchoolResponse findByManagerId(long managerId) throws NotFoundException {
+        if(schoolRepository.findByManagerId(managerId).isPresent()) {
+            return modelMapper.map(schoolRepository.findByManagerId(managerId).get(), SchoolResponse.class);
         }
         throw new NotFoundException("No school found");
     }

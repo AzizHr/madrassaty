@@ -29,19 +29,8 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(
-                                "/api/auth/manager/login",
-                                "/api/auth/manager/register",
-                                "/api/auth/student/login",
-                                "/api/auth/student/register",
-                                "/api/auth/teacher/login",
-                                "/api/auth/teacher/register"
-                        )
-                        .permitAll()
-                        .requestMatchers("/api/managers/**").hasAuthority("MANAGER")
-//                        .requestMatchers("/api/students/**").hasAuthority("STUDENT")
-//                        .requestMatchers("/api/teachers/**").hasAuthority("TEACHER")
-                        .anyRequest().authenticated())
+                        .anyRequest()
+                        .permitAll())
 
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

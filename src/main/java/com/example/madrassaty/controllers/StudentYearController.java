@@ -1,13 +1,15 @@
 package com.example.madrassaty.controllers;
 
 import com.example.madrassaty.dtos.request.StudentYearDTO;
+import com.example.madrassaty.dtos.response.StudentYearResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
-import com.example.madrassaty.models.StudentYear;
 import com.example.madrassaty.services.StudentYearService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/student-year")
@@ -17,23 +19,23 @@ public class StudentYearController {
     private final StudentYearService studentYearService;
 
     @PostMapping
-    public ResponseEntity<StudentYear> save(
-            @RequestBody StudentYearDTO studentYearDTO)
+    public ResponseEntity<StudentYearResponse> save(
+            @Valid @RequestBody StudentYearDTO studentYearDTO)
             throws NotFoundException {
         return new ResponseEntity<>
                 (studentYearService.save(studentYearDTO), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<StudentYear> update(
-            @RequestBody StudentYearDTO studentYearDTO)
+    public ResponseEntity<StudentYearResponse> update(
+            @Valid @RequestBody StudentYearDTO studentYearDTO)
             throws NotFoundException {
         return new ResponseEntity<>
                 (studentYearService.update(studentYearDTO), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentYear> studentYear(
+    public ResponseEntity<StudentYearResponse> studentYear(
             @PathVariable long id)
             throws NotFoundException {
         return new ResponseEntity<>
@@ -46,6 +48,13 @@ public class StudentYearController {
         studentYearService.delete(id);
         return new ResponseEntity<>
                 ("Student-Year with id"+id+"deleted with success", HttpStatus.OK);
+    }
+
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<StudentYearResponse>> allByStudentId(
+            @PathVariable long studentId) {
+        return new ResponseEntity<>
+                (studentYearService.findAllByStudentId(studentId), HttpStatus.OK);
     }
 
 }

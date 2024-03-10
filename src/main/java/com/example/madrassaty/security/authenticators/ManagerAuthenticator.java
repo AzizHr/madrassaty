@@ -1,31 +1,33 @@
-package com.example.madrassaty.authenticators;
+package com.example.madrassaty.security.authenticators;
 
-import com.example.madrassaty.models.Teacher;
+import com.example.madrassaty.models.Manager;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
-@AllArgsConstructor
-public class TeacherAuthenticator implements UserDetails {
+@RequiredArgsConstructor
+public class ManagerAuthenticator implements UserDetails {
 
-    private Teacher teacher;
+    private final Manager manager;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(teacher.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(manager.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return teacher.getPassword();
+        return manager.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return teacher.getEmail();
+        return manager.getEmail();
     }
 
     @Override

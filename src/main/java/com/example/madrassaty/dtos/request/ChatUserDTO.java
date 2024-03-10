@@ -9,9 +9,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatRoomRequest {
-    private String id;
-    private String name;
-    private long senderId;
-    private long receiverId;
+public class ChatUserDTO {
+    private long id;
 }

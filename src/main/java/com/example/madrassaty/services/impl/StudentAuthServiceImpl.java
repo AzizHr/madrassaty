@@ -1,6 +1,6 @@
 package com.example.madrassaty.services.impl;
 
-import com.example.madrassaty.authenticators.StudentAuthenticator;
+import com.example.madrassaty.security.authenticators.StudentAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.StudentRegisterDTO;
 import com.example.madrassaty.dtos.response.AuthResponse;

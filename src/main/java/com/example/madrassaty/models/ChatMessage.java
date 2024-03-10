@@ -3,10 +3,8 @@ package com.example.madrassaty.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDate;
 
 @Setter
@@ -14,12 +12,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class ChatMessage {
 
     @Id
     private long id;
     private String content;
-    private LocalDate createdAt;
     @ManyToOne
     private ChatRoom chatRoom;
     @ManyToOne

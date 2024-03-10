@@ -1,33 +1,40 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.ClassDTO;
+import com.example.madrassaty.dtos.response.ClassResponse;
+import com.example.madrassaty.dtos.response.SchoolResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Class;
 import com.example.madrassaty.repositories.ClassRepository;
+import com.example.madrassaty.repositories.SchoolRepository;
 import com.example.madrassaty.services.ClassService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ClassServiceImpl implements ClassService {
 
     private ClassRepository classRepository;
+    private SchoolRepository schoolRepository;
     private ModelMapper modelMapper;
 
     @Override
-    public Class save(ClassDTO classDTO) {
+    public ClassResponse save(ClassDTO classDTO) throws NotFoundException {
         Class aClass = modelMapper.map(classDTO, Class.class);
-        return classRepository.save(aClass);
+        aClass.setSchool(schoolRepository.findById(classDTO.getSchoolId())
+                .orElseThrow(() -> new NotFoundException("No school found")));
+        return modelMapper.map(classRepository.save(aClass), ClassResponse.class);
     }
 
     @Override
-    public Class update(ClassDTO classDTO) throws NotFoundException {
+    public ClassResponse update(ClassDTO classDTO) throws NotFoundException {
         if(classRepository.findById(classDTO.getId()).isPresent()) {
             Class aClass = modelMapper.map(classDTO, Class.class);
-            return classRepository.save(aClass);
+            return modelMapper.map(classRepository.save(aClass), ClassResponse.class);
         }
         throw new NotFoundException("No class found");
     }
@@ -41,16 +48,35 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Class findById(long id) throws NotFoundException {
+    public ClassResponse findById(long id) throws NotFoundException {
         if(classRepository.findById(id).isPresent()) {
-            return classRepository.findById(id).get();
+            return modelMapper.map(classRepository.findById(id).get(), ClassResponse.class);
         }
         throw new NotFoundException("No class found");
     }
 
     @Override
-    public List<Class> findAll() {
-        return classRepository.findAll();
+    public List<ClassResponse> findAll() {
+        List<Class> classes = classRepository.findAll();
+        return classes.stream()
+                .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClassResponse> findAllBySchoolId(long schoolId) {
+        List<Class> classes = classRepository.findAllBySchoolId(schoolId);
+        return classes.stream()
+                .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClassResponse> findAllByTeacherId(long teacherId) {
+        List<Class> classes = classRepository.findAllByTeacherId(teacherId);
+        return classes.stream()
+                .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.madrassaty.models;
 
+import com.example.madrassaty.enums.DurationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,9 @@ public class Absence {
     @GeneratedValue
     private long id;
     private LocalDate date;
-    private String duration;
+    private int duration;
+    @Enumerated(EnumType.STRING)
+    private DurationType durationType;
     private String reason;
     private boolean isJustified;
     @ManyToOne

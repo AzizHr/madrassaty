@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type")
@@ -33,4 +32,7 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public User() {
+
+    }
 }
