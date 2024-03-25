@@ -1,5 +1,6 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Class;
@@ -55,6 +56,7 @@ public class StudentAuthServiceImpl implements StudentAuthService {
         } else {
             Student student = modelMapper.map(studentRegisterDTO, Student.class);
             student.setRole(Role.STUDENT);
+            student.setStatus(StatusType.OFFLINE);
             student.setPassword(passwordEncoder.encode(studentRegisterDTO.getPassword()));
             if (studentRegisterDTO.getImage() != null) {
                 String imageUrl = cloudinaryService.uploadFile(studentRegisterDTO.getImage());

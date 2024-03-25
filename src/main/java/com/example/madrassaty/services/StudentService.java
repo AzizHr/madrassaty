@@ -1,5 +1,6 @@
 package com.example.madrassaty.services;
 
+import com.example.madrassaty.dtos.response.StudentResponse;
 import com.example.madrassaty.dtos.response.UserResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import org.springframework.data.domain.Page;

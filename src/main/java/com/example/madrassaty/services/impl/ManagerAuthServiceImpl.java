@@ -1,5 +1,6 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.security.authenticators.ManagerAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
@@ -51,6 +52,7 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
         } else {
             Manager manager = modelMapper.map(managerRegisterDTO, Manager.class);
             manager.setRole(Role.MANAGER);
+            manager.setStatus(StatusType.OFFLINE);
             manager.setSchool(schoolRepository.findById(managerRegisterDTO.getSchoolId()).orElseThrow(() -> new NotFoundException("No school found")));
             manager.setPassword(passwordEncoder.encode(managerRegisterDTO.getPassword()));
             if (managerRegisterDTO.getImage() != null) {

@@ -1,5 +1,6 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.security.authenticators.TeacherAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
@@ -48,6 +49,7 @@ public class TeacherAuthServiceImpl implements TeacherAuthService {
         } else {
             Teacher teacher = modelMapper.map(teacherRegisterDTO, Teacher.class);
             teacher.setRole(Role.TEACHER);
+            teacher.setStatus(StatusType.OFFLINE);
             teacher.setPassword(passwordEncoder.encode(teacherRegisterDTO.getPassword()));
             if (teacherRegisterDTO.getImage() != null) {
                 String imageUrl = cloudinaryService.uploadFile(teacherRegisterDTO.getImage());

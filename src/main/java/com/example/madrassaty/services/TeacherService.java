@@ -1,5 +1,6 @@
 package com.example.madrassaty.services;
 
+import com.example.madrassaty.dtos.response.TeacherResponse;
 import com.example.madrassaty.dtos.response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
