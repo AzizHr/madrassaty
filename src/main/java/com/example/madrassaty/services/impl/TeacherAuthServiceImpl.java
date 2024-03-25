@@ -1,5 +1,6 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.security.authenticators.TeacherAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.TeacherRegisterDTO;
@@ -40,19 +41,24 @@ public class TeacherAuthServiceImpl implements TeacherAuthService {
     }
 
     @Override
-    public AuthResponse register(TeacherRegisterDTO teacherRegisterDTO) throws IOException {
-        Teacher teacher = modelMapper.map(teacherRegisterDTO, Teacher.class);
-        teacher.setRole(Role.TEACHER);
-        teacher.setPassword(passwordEncoder.encode(teacherRegisterDTO.getPassword()));
-        if (teacherRegisterDTO.getImage() != null) {
-            String imageUrl = cloudinaryService.uploadFile(teacherRegisterDTO.getImage());
-            teacher.setImage(imageUrl);
+    public AuthResponse register(TeacherRegisterDTO teacherRegisterDTO) throws IOException, EmailAlreadyInUseException {
+
+        if(teacherRepository.findTeacherByEmail(teacherRegisterDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyInUseException("This email is already in use");
+        } else {
+            Teacher teacher = modelMapper.map(teacherRegisterDTO, Teacher.class);
+            teacher.setRole(Role.TEACHER);
+            teacher.setPassword(passwordEncoder.encode(teacherRegisterDTO.getPassword()));
+            if (teacherRegisterDTO.getImage() != null) {
+                String imageUrl = cloudinaryService.uploadFile(teacherRegisterDTO.getImage());
+                teacher.setImage(imageUrl);
+            }
+            teacherRepository.save(teacher);
+            TeacherAuthenticator teacherAuthenticator = new TeacherAuthenticator(teacher);
+            String jwtToken = jwtService.generateToken(teacherAuthenticator);
+            AuthResponse authResponse = modelMapper.map(teacher, AuthResponse.class);
+            authResponse.setToken(jwtToken);
+            return authResponse;
         }
-        teacherRepository.save(teacher);
-        TeacherAuthenticator teacherAuthenticator = new TeacherAuthenticator(teacher);
-        String jwtToken = jwtService.generateToken(teacherAuthenticator);
-        AuthResponse authResponse = modelMapper.map(teacher, AuthResponse.class);
-        authResponse.setToken(jwtToken);
-        return authResponse;
     }
 }

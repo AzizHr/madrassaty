@@ -1,5 +1,6 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.Class;
 import com.example.madrassaty.models.Specialty;
@@ -47,29 +48,34 @@ public class StudentAuthServiceImpl implements StudentAuthService {
     }
 
     @Override
-    public AuthResponse register(StudentRegisterDTO studentRegisterDTO) throws IOException, NotFoundException {
-        Student student = modelMapper.map(studentRegisterDTO, Student.class);
-        student.setRole(Role.STUDENT);
-        student.setPassword(passwordEncoder.encode(studentRegisterDTO.getPassword()));
-        if (studentRegisterDTO.getImage() != null) {
-            String imageUrl = cloudinaryService.uploadFile(studentRegisterDTO.getImage());
-            student.setImage(imageUrl);
-        }
-        if(specialtyRepository.findById(studentRegisterDTO.getSpecialtyId()).isPresent()) {
-            Specialty specialty = specialtyRepository.findById(studentRegisterDTO.getSpecialtyId()).get();
-            if(classRepository.findById(studentRegisterDTO.getClassId()).isPresent()) {
-                Class aClass = classRepository.findById(studentRegisterDTO.getClassId()).get();
-                student.setSpecialty(specialty);
-                student.set_class(aClass);
-                studentRepository.save(student);
-                StudentAuthenticator studentAuthenticator = new StudentAuthenticator(student);
-                String jwtToken = jwtService.generateToken(studentAuthenticator);
-                AuthResponse authResponse = modelMapper.map(student, AuthResponse.class);
-                authResponse.setToken(jwtToken);
-                return authResponse;
+    public AuthResponse register(StudentRegisterDTO studentRegisterDTO) throws IOException, NotFoundException, EmailAlreadyInUseException {
+
+        if(studentRepository.findStudentByEmail(studentRegisterDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyInUseException("This email is already in use");
+        } else {
+            Student student = modelMapper.map(studentRegisterDTO, Student.class);
+            student.setRole(Role.STUDENT);
+            student.setPassword(passwordEncoder.encode(studentRegisterDTO.getPassword()));
+            if (studentRegisterDTO.getImage() != null) {
+                String imageUrl = cloudinaryService.uploadFile(studentRegisterDTO.getImage());
+                student.setImage(imageUrl);
             }
-            throw new NotFoundException("No class found");
+            if(specialtyRepository.findById(studentRegisterDTO.getSpecialtyId()).isPresent()) {
+                Specialty specialty = specialtyRepository.findById(studentRegisterDTO.getSpecialtyId()).get();
+                if(classRepository.findById(studentRegisterDTO.getClassId()).isPresent()) {
+                    Class aClass = classRepository.findById(studentRegisterDTO.getClassId()).get();
+                    student.setSpecialty(specialty);
+                    student.set_class(aClass);
+                    studentRepository.save(student);
+                    StudentAuthenticator studentAuthenticator = new StudentAuthenticator(student);
+                    String jwtToken = jwtService.generateToken(studentAuthenticator);
+                    AuthResponse authResponse = modelMapper.map(student, AuthResponse.class);
+                    authResponse.setToken(jwtToken);
+                    return authResponse;
+                }
+                throw new NotFoundException("No class found");
+            }
+            throw new NotFoundException("No specialty found");
         }
-        throw new NotFoundException("No specialty found");
     }
 }

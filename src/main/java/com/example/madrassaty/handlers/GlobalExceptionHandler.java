@@ -1,5 +1,6 @@
 package com.example.madrassaty.handlers;
 
+import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
         return new ResponseEntity<>(Map.of("message", e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyInUseException(EmailAlreadyInUseException e) {
+        return new ResponseEntity<>(Map.of("message", e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
 }

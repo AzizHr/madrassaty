@@ -1,5 +1,6 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.security.authenticators.ManagerAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.ManagerRegisterDTO;
@@ -43,20 +44,25 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
     }
 
     @Override
-    public AuthResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException {
-        Manager manager = modelMapper.map(managerRegisterDTO, Manager.class);
-        manager.setRole(Role.MANAGER);
-        manager.setSchool(schoolRepository.findById(managerRegisterDTO.getSchoolId()).orElseThrow(() -> new NotFoundException("No school found")));
-        manager.setPassword(passwordEncoder.encode(managerRegisterDTO.getPassword()));
-        if (managerRegisterDTO.getImage() != null) {
-            String imageUrl = cloudinaryService.uploadFile(managerRegisterDTO.getImage());
-            manager.setImage(imageUrl);
+    public AuthResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException, EmailAlreadyInUseException {
+
+        if(managerRepository.findManagerByEmail(managerRegisterDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyInUseException("This email is already in use");
+        } else {
+            Manager manager = modelMapper.map(managerRegisterDTO, Manager.class);
+            manager.setRole(Role.MANAGER);
+            manager.setSchool(schoolRepository.findById(managerRegisterDTO.getSchoolId()).orElseThrow(() -> new NotFoundException("No school found")));
+            manager.setPassword(passwordEncoder.encode(managerRegisterDTO.getPassword()));
+            if (managerRegisterDTO.getImage() != null) {
+                String imageUrl = cloudinaryService.uploadFile(managerRegisterDTO.getImage());
+                manager.setImage(imageUrl);
+            }
+            managerRepository.save(manager);
+            ManagerAuthenticator managerAuthenticator = new ManagerAuthenticator(manager);
+            String jwtToken = jwtService.generateToken(managerAuthenticator);
+            AuthResponse authResponse = modelMapper.map(manager, AuthResponse.class);
+            authResponse.setToken(jwtToken);
+            return authResponse;
         }
-        managerRepository.save(manager);
-        ManagerAuthenticator managerAuthenticator = new ManagerAuthenticator(manager);
-        String jwtToken = jwtService.generateToken(managerAuthenticator);
-        AuthResponse authResponse = modelMapper.map(manager, AuthResponse.class);
-        authResponse.setToken(jwtToken);
-        return authResponse;
     }
 }
