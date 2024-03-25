@@ -6,10 +6,12 @@ import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.services.SpecialtyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/specialties")
@@ -43,10 +45,12 @@ public class SpecialtyController {
     }
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<List<SpecialtyResponse>> allBySchoolId(
-            @PathVariable long schoolId) {
-        return new ResponseEntity<>
-                (specialtyService.findAllBySchoolId(schoolId), HttpStatus.OK);
+    public ResponseEntity<?> allBySchoolId(
+            @PathVariable long schoolId, Pageable pageable) {
+        if(specialtyService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
+            return new ResponseEntity<>(Map.of("message", "No specialties found"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(specialtyService.findAllBySchoolId(schoolId, pageable), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

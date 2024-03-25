@@ -1,6 +1,7 @@
 package com.example.madrassaty.controllers;
 
 import com.example.madrassaty.dtos.request.SpecialtySubjectDTO;
+import com.example.madrassaty.exceptions.AlreadyAssignedException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.SpecialtySubject;
 import com.example.madrassaty.services.SpecialtySubjectService;
@@ -18,7 +19,7 @@ public class SpecialtySubjectController {
     private final SpecialtySubjectService specialtySubjectService;
 
     @PostMapping("/assign/subject/to/specialty")
-    public ResponseEntity<SpecialtySubject> save(@Valid @RequestBody SpecialtySubjectDTO specialtySubjectDTO) {
+    public ResponseEntity<SpecialtySubject> save(@Valid @RequestBody SpecialtySubjectDTO specialtySubjectDTO) throws AlreadyAssignedException {
         return ResponseEntity.ok(specialtySubjectService.save(specialtySubjectDTO));
     }
 

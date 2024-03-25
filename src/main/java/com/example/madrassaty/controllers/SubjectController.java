@@ -6,10 +6,11 @@ import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.services.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/subjects")
@@ -50,9 +51,11 @@ public class SubjectController {
                 ("Subject with id"+id+"deleted with success", HttpStatus.OK);
     }
 
-    @GetMapping("/specialty/{specialtyId}")
-    public ResponseEntity<List<SubjectResponse>> allBySpecialtyId(@PathVariable long specialtyId) {
-        return new ResponseEntity<>
-                (subjectService.findAllBySpecialtyId(specialtyId), HttpStatus.OK);
+    @GetMapping("/school/{schoolId}")
+    public ResponseEntity<?> allBySchoolId(@PathVariable long schoolId, Pageable pageable) {
+        if(subjectService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
+            return new ResponseEntity<>(Map.of("message", "No subjects found"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(subjectService.findAllBySchoolId(schoolId, pageable), HttpStatus.OK);
     }
 }

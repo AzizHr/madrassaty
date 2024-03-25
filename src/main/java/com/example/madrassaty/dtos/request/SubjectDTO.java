@@ -17,5 +17,6 @@ public class SubjectDTO {
     @NotEmpty(message = "name can't be empty")
     @NotNull(message = "name is required")
     private String name;
+    private int schoolId;
 
 }

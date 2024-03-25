@@ -1,14 +1,19 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.SpecialtyDTO;
+import com.example.madrassaty.dtos.response.ClassResponse;
 import com.example.madrassaty.dtos.response.SpecialtyResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
+import com.example.madrassaty.models.Class;
 import com.example.madrassaty.models.Specialty;
 import com.example.madrassaty.repositories.SchoolRepository;
 import com.example.madrassaty.repositories.SpecialtyRepository;
 import com.example.madrassaty.services.SpecialtyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,10 +61,15 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     }
 
     @Override
-    public List<SpecialtyResponse> findAllBySchoolId(long schoolId) {
-        List<Specialty> specialties = specialtyRepository.findAllBySchoolId(schoolId);
-        return specialties.stream()
-                .map(specialty -> modelMapper.map(specialty, SpecialtyResponse.class))
-                .collect(Collectors.toList());
+    public Page<SpecialtyResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+        Page<Specialty> specialtyPage = specialtyRepository.findAllBySchoolId(schoolId, pageable);
+
+        return new PageImpl<>(
+                specialtyPage.getContent().stream()
+                        .map(specialty -> modelMapper.map(specialty, SpecialtyResponse.class))
+                        .collect(Collectors.toList()),
+                specialtyPage.getPageable(),
+                specialtyPage.getTotalElements()
+        );
     }
 }

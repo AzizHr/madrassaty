@@ -46,7 +46,7 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
     public AuthResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException {
         Manager manager = modelMapper.map(managerRegisterDTO, Manager.class);
         manager.setRole(Role.MANAGER);
-        manager.setSchool(schoolRepository.findById(1L).orElseThrow(() -> new NotFoundException("No school found")));
+        manager.setSchool(schoolRepository.findById(managerRegisterDTO.getSchoolId()).orElseThrow(() -> new NotFoundException("No school found")));
         manager.setPassword(passwordEncoder.encode(managerRegisterDTO.getPassword()));
         if (managerRegisterDTO.getImage() != null) {
             String imageUrl = cloudinaryService.uploadFile(managerRegisterDTO.getImage());

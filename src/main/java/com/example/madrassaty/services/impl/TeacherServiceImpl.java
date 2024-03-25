@@ -7,6 +7,9 @@ import com.example.madrassaty.repositories.TeacherRepository;
 import com.example.madrassaty.services.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,18 +22,28 @@ public class TeacherServiceImpl implements TeacherService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<UserResponse> findAllBySchoolId(long schoolId) {
-        List<Teacher> teachers = teacherRepository.findAllBySchoolId(schoolId);
-        return teachers.stream()
-                .map(teacher -> modelMapper.map(teacher, UserResponse.class))
-                .collect(Collectors.toList());
+    public Page<UserResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+        Page<Teacher> teacherPage = teacherRepository.findAllBySchoolId(schoolId, pageable);
+
+        return new PageImpl<>(
+                teacherPage.getContent().stream()
+                        .map(teacher -> modelMapper.map(teacher, UserResponse.class))
+                        .collect(Collectors.toList()),
+                teacherPage.getPageable(),
+                teacherPage.getTotalElements()
+        );
     }
 
     @Override
-    public List<UserResponse> findAllByClassId(long classId) {
-        List<Teacher> teachers = teacherRepository.findAllByClassId(classId);
-        return teachers.stream()
-                .map(teacher -> modelMapper.map(teacher, UserResponse.class))
-                .collect(Collectors.toList());
+    public Page<UserResponse> findAllByClassId(long classId, Pageable pageable) {
+        Page<Teacher> teacherPage = teacherRepository.findAllByClassId(classId, pageable);
+
+        return new PageImpl<>(
+                teacherPage.getContent().stream()
+                        .map(teacher -> modelMapper.map(teacher, UserResponse.class))
+                        .collect(Collectors.toList()),
+                teacherPage.getPageable(),
+                teacherPage.getTotalElements()
+        );
     }
 }

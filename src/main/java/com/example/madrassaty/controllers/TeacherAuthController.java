@@ -7,6 +7,7 @@ import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.services.TeacherAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class TeacherAuthController {
         return ResponseEntity.ok(teacherAuthService.login(authRequestDTO));
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AuthResponse> register(@Valid @ModelAttribute TeacherRegisterDTO teacherRegisterDTO) throws NotFoundException, IOException {
         return ResponseEntity.ok(teacherAuthService.register(teacherRegisterDTO));
     }

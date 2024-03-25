@@ -2,12 +2,17 @@ package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.SubjectDTO;
 import com.example.madrassaty.dtos.response.SubjectResponse;
+import com.example.madrassaty.dtos.response.UserResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
+import com.example.madrassaty.models.Student;
 import com.example.madrassaty.models.Subject;
 import com.example.madrassaty.repositories.SubjectRepository;
 import com.example.madrassaty.services.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,10 +56,15 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<SubjectResponse> findAllBySpecialtyId(long specialtyId) {
-        List<Subject> subjects = subjectRepository.findAllBySpecialtyId(specialtyId);
-        return subjects.stream()
-                .map(subject -> modelMapper.map(subject, SubjectResponse.class))
-                .collect(Collectors.toList());
+    public Page<SubjectResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+        Page<Subject> subjectPage = subjectRepository.findAllBySchoolId(schoolId, pageable);
+
+        return new PageImpl<>(
+                subjectPage.getContent().stream()
+                        .map(subject -> modelMapper.map(subject, SubjectResponse.class))
+                        .collect(Collectors.toList()),
+                subjectPage.getPageable(),
+                subjectPage.getTotalElements()
+        );
     }
 }

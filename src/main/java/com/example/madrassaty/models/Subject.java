@@ -18,6 +18,8 @@ public class Subject {
     @GeneratedValue
     private long id;
     private String name;
+    @ManyToOne
+    private School school;
     @OneToMany(mappedBy = "subject")
     private List<Teacher> teachers;
 

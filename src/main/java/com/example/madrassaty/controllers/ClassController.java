@@ -3,14 +3,15 @@ package com.example.madrassaty.controllers;
 import com.example.madrassaty.dtos.request.ClassDTO;
 import com.example.madrassaty.dtos.response.ClassResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
-import com.example.madrassaty.models.Class;
 import com.example.madrassaty.services.ClassService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/classes")
@@ -59,14 +60,18 @@ public class ClassController {
     }
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<List<ClassResponse>> allBySchoolId(@PathVariable long schoolId) {
-        return new ResponseEntity<>
-                (classService.findAllBySchoolId(schoolId), HttpStatus.OK);
+    public ResponseEntity<?> allBySchoolId(@PathVariable long schoolId, Pageable pageable) {
+        if(classService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
+            return new ResponseEntity<>(Map.of("message", "No classrooms found"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(classService.findAllBySchoolId(schoolId, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/teacher/{teacherId}")
-    public ResponseEntity<List<ClassResponse>> allByTeacherId(@PathVariable long teacherId) {
-        return new ResponseEntity<>
-                (classService.findAllByTeacherId(teacherId), HttpStatus.OK);
+    public ResponseEntity<?> allByTeacherId(@PathVariable long teacherId, Pageable pageable) {
+        if(classService.findAllByTeacherId(teacherId, pageable).isEmpty()) {
+            return new ResponseEntity<>(Map.of("message", "No classrooms found"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(classService.findAllByTeacherId(teacherId, pageable), HttpStatus.OK);
     }
 }

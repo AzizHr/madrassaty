@@ -7,6 +7,7 @@ import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.services.StudentAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +20,12 @@ public class StudentAuthController {
 
     private final StudentAuthService studentAuthService;
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(studentAuthService.login(authRequestDTO));
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AuthResponse> register(@Valid @ModelAttribute StudentRegisterDTO studentRegisterDTO) throws NotFoundException, IOException {
         return ResponseEntity.ok(studentAuthService.register(studentRegisterDTO));
     }

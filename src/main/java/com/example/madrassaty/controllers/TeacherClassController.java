@@ -1,6 +1,7 @@
 package com.example.madrassaty.controllers;
 
 import com.example.madrassaty.dtos.request.TeacherClassDTO;
+import com.example.madrassaty.exceptions.AlreadyAssignedException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.TeacherClass;
 import com.example.madrassaty.services.TeacherClassService;
@@ -18,7 +19,7 @@ public class TeacherClassController {
     private final TeacherClassService teacherClassService;
 
     @PostMapping("/assign/teacher/to/class")
-    public ResponseEntity<TeacherClass> save(@RequestBody @Valid TeacherClassDTO teacherClassDTO) {
+    public ResponseEntity<TeacherClass> save(@RequestBody @Valid TeacherClassDTO teacherClassDTO) throws AlreadyAssignedException {
         return ResponseEntity.ok(teacherClassService.save(teacherClassDTO));
     }
 

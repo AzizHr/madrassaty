@@ -1,6 +1,7 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.SpecialtySubjectDTO;
+import com.example.madrassaty.exceptions.AlreadyAssignedException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.SpecialtySubject;
 import com.example.madrassaty.models.embeddables.SpecialtySubjectId;
@@ -16,13 +17,17 @@ public class SpecialtySubjectServiceImpl implements SpecialtySubjectService {
     private final SpecialtySubjectRepository specialtySubjectRepository;
 
     @Override
-    public SpecialtySubject save(SpecialtySubjectDTO specialtySubjectDTO) {
+    public SpecialtySubject save(SpecialtySubjectDTO specialtySubjectDTO) throws AlreadyAssignedException {
         SpecialtySubjectId specialtySubjectId = new SpecialtySubjectId();
         specialtySubjectId.setSpecialtyId(specialtySubjectDTO.getSpecialtyId());
         specialtySubjectId.setSubjectId(specialtySubjectDTO.getSubjectId());
-        SpecialtySubject specialtySubject = new SpecialtySubject();
-        specialtySubject.setId(specialtySubjectId);
-        return specialtySubjectRepository.save(specialtySubject);
+        if(specialtySubjectRepository.findById(specialtySubjectId).isPresent()) {
+            throw new AlreadyAssignedException("This subject is already assigned to this specialty");
+        } else {
+            SpecialtySubject specialtySubject = new SpecialtySubject();
+            specialtySubject.setId(specialtySubjectId);
+            return specialtySubjectRepository.save(specialtySubject);
+        }
     }
 
     @Override

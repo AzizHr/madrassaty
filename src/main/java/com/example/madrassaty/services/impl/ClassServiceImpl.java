@@ -10,6 +10,9 @@ import com.example.madrassaty.repositories.SchoolRepository;
 import com.example.madrassaty.services.ClassService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,19 +67,29 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassResponse> findAllBySchoolId(long schoolId) {
-        List<Class> classes = classRepository.findAllBySchoolId(schoolId);
-        return classes.stream()
-                .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
-                .collect(Collectors.toList());
+    public Page<ClassResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+        Page<Class> classPage = classRepository.findAllBySchoolId(schoolId, pageable);
+
+        return new PageImpl<>(
+                classPage.getContent().stream()
+                        .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
+                        .collect(Collectors.toList()),
+                classPage.getPageable(),
+                classPage.getTotalElements()
+        );
     }
 
     @Override
-    public List<ClassResponse> findAllByTeacherId(long teacherId) {
-        List<Class> classes = classRepository.findAllByTeacherId(teacherId);
-        return classes.stream()
-                .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
-                .collect(Collectors.toList());
+    public Page<ClassResponse> findAllByTeacherId(long teacherId, Pageable pageable) {
+        Page<Class> classPage = classRepository.findAllByTeacherId(teacherId, pageable);
+
+        return new PageImpl<>(
+                classPage.getContent().stream()
+                        .map(aClass -> modelMapper.map(aClass, ClassResponse.class))
+                        .collect(Collectors.toList()),
+                classPage.getPageable(),
+                classPage.getTotalElements()
+        );
     }
 
 }

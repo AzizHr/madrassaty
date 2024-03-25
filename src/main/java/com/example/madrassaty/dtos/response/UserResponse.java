@@ -16,4 +16,6 @@ public class UserResponse {
     private String lastname;
     private String image;
     private StatusType status;
+    private String city;
+    private String address;
 }
