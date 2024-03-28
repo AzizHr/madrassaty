@@ -2,6 +2,7 @@ package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
+import com.example.madrassaty.repositories.UserRepository;
 import com.example.madrassaty.security.authenticators.ManagerAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.ManagerRegisterDTO;
@@ -25,6 +26,7 @@ import java.io.IOException;
 public class ManagerAuthServiceImpl implements ManagerAuthService {
 
     private final ManagerRepository managerRepository;
+    private final UserRepository userRepository;
     private final SchoolRepository schoolRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -47,7 +49,7 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
     @Override
     public AuthResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException, EmailAlreadyInUseException {
 
-        if(managerRepository.findManagerByEmail(managerRegisterDTO.getEmail()).isPresent()) {
+        if(userRepository.findByEmail(managerRegisterDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyInUseException("This email is already in use");
         } else {
             Manager manager = modelMapper.map(managerRegisterDTO, Manager.class);

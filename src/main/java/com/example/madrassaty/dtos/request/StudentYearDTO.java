@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class StudentYearDTO {
 
-    private long id;
+    private UUID id;
     @NotNull(message = "startsAt is required")
     private LocalDate startsAt;
     @NotNull(message = "endsAt is required")
@@ -23,7 +24,7 @@ public class StudentYearDTO {
     @NotNull(message = "scholarYear is required")
     private String scholarYear;
     @NotNull(message = "studentId is required")
-    private long studentId;
+    private UUID studentId;
     @NotNull(message = "yearId is required")
-    private long yearId;
+    private UUID yearId;
 }

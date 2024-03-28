@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -14,9 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class SpecialtyResponse {
 
-    private long id;
+    private UUID id;
     private String name;
     private SchoolDTO school;
-    private List<UserResponse> students;
+    private List<ProfileResponse> students;
 
 }

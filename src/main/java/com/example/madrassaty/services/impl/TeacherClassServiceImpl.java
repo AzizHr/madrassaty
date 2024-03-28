@@ -10,6 +10,8 @@ import com.example.madrassaty.services.TeacherClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class TeacherClassServiceImpl implements TeacherClassService {
@@ -44,7 +46,7 @@ public class TeacherClassServiceImpl implements TeacherClassService {
     }
 
     @Override
-    public void delete(long teacherId, long classId) throws NotFoundException {
+    public void delete(UUID teacherId, UUID classId) throws NotFoundException {
         TeacherClassId teacherClassId = new TeacherClassId();
         teacherClassId.setTeacherId(teacherId);
         teacherClassId.setClassId(classId);

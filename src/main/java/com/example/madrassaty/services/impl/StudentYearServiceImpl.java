@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +52,7 @@ public class StudentYearServiceImpl implements StudentYearService {
     }
 
     @Override
-    public void delete(long id) throws NotFoundException {
+    public void delete(UUID id) throws NotFoundException {
         if(studentYearRepository.findById(id).isPresent()) {
             studentYearRepository.deleteById(id);
         }
@@ -59,7 +60,7 @@ public class StudentYearServiceImpl implements StudentYearService {
     }
 
     @Override
-    public StudentYearResponse findById(long id) throws NotFoundException {
+    public StudentYearResponse findById(UUID id) throws NotFoundException {
         if(studentYearRepository.findById(id).isPresent()) {
             return modelMapper.map(studentYearRepository.findById(id).get(), StudentYearResponse.class);
         }
@@ -67,7 +68,7 @@ public class StudentYearServiceImpl implements StudentYearService {
     }
 
     @Override
-    public List<StudentYearResponse> findAllByStudentId(long studentId) {
+    public List<StudentYearResponse> findAllByStudentId(UUID studentId) {
         List<StudentYear> studentYears = studentYearRepository.findAllByStudentId(studentId);
         return studentYears.stream()
                 .map(studentYear -> modelMapper.map(studentYear, StudentYearResponse.class))

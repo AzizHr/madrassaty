@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -14,10 +15,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class StudentYearResponse {
 
-    private long id;
+    private UUID id;
     private LocalDate startsAt;
     private LocalDate endsAt;
     private String scholarYear;
-    private UserResponse student;
+    private ProfileResponse student;
     private YearDTO year;
 }

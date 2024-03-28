@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -14,7 +16,7 @@ import lombok.Setter;
 public class StudentRegisterDTO extends UserDTO {
 
     @NotNull(message = "specialtyId is required")
-    private long specialtyId;
+    private UUID specialtyId;
     @NotNull(message = "classId is required")
-    private long classId;
+    private UUID classId;
 }

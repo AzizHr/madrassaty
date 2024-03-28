@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/classes")
@@ -39,14 +40,14 @@ public class ClassController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClassResponse> aClass(
-            @PathVariable long id)
+            @PathVariable UUID id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (classService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id)
+    public ResponseEntity<String> delete(@PathVariable UUID id)
             throws NotFoundException {
         classService.delete(id);
         return new ResponseEntity<>
@@ -60,7 +61,7 @@ public class ClassController {
     }
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<?> allBySchoolId(@PathVariable long schoolId, Pageable pageable) {
+    public ResponseEntity<?> allBySchoolId(@PathVariable UUID schoolId, Pageable pageable) {
         if(classService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No classrooms found"), HttpStatus.OK);
         }
@@ -68,7 +69,7 @@ public class ClassController {
     }
 
     @GetMapping("/teacher/{teacherId}")
-    public ResponseEntity<?> allByTeacherId(@PathVariable long teacherId, Pageable pageable) {
+    public ResponseEntity<?> allByTeacherId(@PathVariable UUID teacherId, Pageable pageable) {
         if(classService.findAllByTeacherId(teacherId, pageable).isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No classrooms found"), HttpStatus.OK);
         }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/absences")
@@ -36,14 +37,14 @@ public class AbsenceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AbsenceResponse> absence(
-            @PathVariable long id)
+            @PathVariable UUID id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (absenceService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id)
+    public ResponseEntity<String> delete(@PathVariable UUID id)
             throws NotFoundException {
         absenceService.delete(id);
         return new ResponseEntity<>
@@ -51,7 +52,7 @@ public class AbsenceController {
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<AbsenceResponse>> allByStudentId(@PathVariable long studentId) {
+    public ResponseEntity<List<AbsenceResponse>> allByStudentId(@PathVariable UUID studentId) {
         return new ResponseEntity<>
                 (absenceService.findAllByStudentId(studentId), HttpStatus.OK);
     }

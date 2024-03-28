@@ -7,7 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface SpecialtyService extends GlobalService<SpecialtyResponse, SpecialtyDTO> {
-    Page<SpecialtyResponse> findAllBySchoolId(long schoolId, Pageable pageable);
+    Page<SpecialtyResponse> findAllBySchoolId(UUID schoolId, Pageable pageable);
 }

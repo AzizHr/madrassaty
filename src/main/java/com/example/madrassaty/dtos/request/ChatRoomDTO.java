@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRoomDTO {
-    private String id;
-    private long senderId;
-    private long receiverId;
+    private UUID id;
+    private UUID senderId;
+    private UUID receiverId;
 }

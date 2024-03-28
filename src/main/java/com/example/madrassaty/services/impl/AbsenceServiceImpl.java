@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +54,7 @@ public class AbsenceServiceImpl implements AbsenceService {
     }
 
     @Override
-    public void delete(long id) throws NotFoundException {
+    public void delete(UUID id) throws NotFoundException {
         if(absenceRepository.findById(id).isPresent()) {
             absenceRepository.deleteById(id);
         }
@@ -61,7 +62,7 @@ public class AbsenceServiceImpl implements AbsenceService {
     }
 
     @Override
-    public AbsenceResponse findById(long id) throws NotFoundException {
+    public AbsenceResponse findById(UUID id) throws NotFoundException {
         if(absenceRepository.findById(id).isPresent()) {
             return modelMapper.map(absenceRepository.findById(id).get(), AbsenceResponse.class);
         }
@@ -69,7 +70,7 @@ public class AbsenceServiceImpl implements AbsenceService {
     }
 
     @Override
-    public List<AbsenceResponse> findAllByStudentId(long studentId) {
+    public List<AbsenceResponse> findAllByStudentId(UUID studentId) {
         List<Absence> absences = absenceRepository.findAllByStudentId(studentId);
         return absences.stream()
                 .map(absence -> modelMapper.map(absence, AbsenceResponse.class))

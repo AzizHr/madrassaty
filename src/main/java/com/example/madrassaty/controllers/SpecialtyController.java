@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/specialties")
@@ -38,7 +39,7 @@ public class SpecialtyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SpecialtyResponse> specialty(
-            @PathVariable long id)
+            @PathVariable UUID id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (specialtyService.findById(id), HttpStatus.OK);
@@ -46,7 +47,7 @@ public class SpecialtyController {
 
     @GetMapping("/school/{schoolId}")
     public ResponseEntity<?> allBySchoolId(
-            @PathVariable long schoolId, Pageable pageable) {
+            @PathVariable UUID schoolId, Pageable pageable) {
         if(specialtyService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No specialties found"), HttpStatus.OK);
         }
@@ -54,7 +55,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id)
+    public ResponseEntity<String> delete(@PathVariable UUID id)
             throws NotFoundException {
         specialtyService.delete(id);
         return new ResponseEntity<>

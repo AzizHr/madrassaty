@@ -6,6 +6,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 public class ChatMessage {
 
     @Id
-    private long id;
+    private UUID id;
     private String content;
     @ManyToOne
     private ChatRoom chatRoom;

@@ -7,16 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectDTO {
 
-    private long id;
+    private UUID id;
     @NotEmpty(message = "name can't be empty")
     @NotNull(message = "name is required")
     private String name;
-    private int schoolId;
+    @NotNull(message = "schoolId is required")
+    private UUID schoolId;
 
 }

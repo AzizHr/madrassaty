@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/schools")
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class SchoolController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SchoolResponse> school(
-            @PathVariable long id)
+            @PathVariable UUID id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (schoolService.findById(id), HttpStatus.OK);
@@ -43,14 +45,14 @@ public class SchoolController {
 
     @GetMapping("/by/manager/{managerId}")
     public ResponseEntity<SchoolResponse> byManager(
-            @PathVariable long managerId)
+            @PathVariable UUID managerId)
             throws NotFoundException {
         return new ResponseEntity<>
                 (schoolService.findByManagerId(managerId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id)
+    public ResponseEntity<?> delete(@PathVariable UUID id)
             throws NotFoundException {
         schoolService.delete(id);
         return new ResponseEntity<>

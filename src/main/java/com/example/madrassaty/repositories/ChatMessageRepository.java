@@ -4,7 +4,8 @@ import com.example.madrassaty.models.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    List<ChatMessage> findAllBySenderIdAndReceiverId(long senderId, long receiverId);
+public interface ChatMessageRepository extends JpaRepository<ChatMessage, UUID> {
+    List<ChatMessage> findAllBySenderIdAndReceiverId(UUID senderId, UUID receiverId);
 }

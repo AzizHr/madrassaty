@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void delete(long id) throws NotFoundException {
+    public void delete(UUID id) throws NotFoundException {
         if(classRepository.findById(id).isPresent()) {
             classRepository.deleteById(id);
         }
@@ -51,7 +52,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public ClassResponse findById(long id) throws NotFoundException {
+    public ClassResponse findById(UUID id) throws NotFoundException {
         if(classRepository.findById(id).isPresent()) {
             return modelMapper.map(classRepository.findById(id).get(), ClassResponse.class);
         }
@@ -67,7 +68,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Page<ClassResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+    public Page<ClassResponse> findAllBySchoolId(UUID schoolId, Pageable pageable) {
         Page<Class> classPage = classRepository.findAllBySchoolId(schoolId, pageable);
 
         return new PageImpl<>(
@@ -80,7 +81,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Page<ClassResponse> findAllByTeacherId(long teacherId, Pageable pageable) {
+    public Page<ClassResponse> findAllByTeacherId(UUID teacherId, Pageable pageable) {
         Page<Class> classPage = classRepository.findAllByTeacherId(teacherId, pageable);
 
         return new PageImpl<>(

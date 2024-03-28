@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -17,8 +18,8 @@ import java.util.List;
 public class School {
 
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
     @Enumerated(EnumType.STRING)
     private SchoolType type;
@@ -30,5 +31,7 @@ public class School {
     private List<Manager> managers;
     @OneToMany(mappedBy = "school")
     private List<Class> classes;
+    @OneToMany(mappedBy = "school")
+    private List<Subject> subjects;
 
 }

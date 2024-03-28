@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +35,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
-    public List<ChatMessageResponse> findChatMessages(long senderId, long receiverId) {
+    public List<ChatMessageResponse> findChatMessages(UUID senderId, UUID receiverId) {
         List<ChatMessage> chatMessages = repository.findAllBySenderIdAndReceiverId(senderId, receiverId);
         return chatMessages.stream()
                 .map(chatMessage -> modelMapper.map(chatMessage, ChatMessageResponse.class))

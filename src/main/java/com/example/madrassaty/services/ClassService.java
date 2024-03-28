@@ -7,9 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ClassService extends GlobalService<ClassResponse, ClassDTO> {
     List<ClassResponse> findAll();
-    Page<ClassResponse> findAllBySchoolId(long schoolId, Pageable pageable);
-    Page<ClassResponse> findAllByTeacherId(long teacherId, Pageable pageable);
+    Page<ClassResponse> findAllBySchoolId(UUID schoolId, Pageable pageable);
+    Page<ClassResponse> findAllByTeacherId(UUID teacherId, Pageable pageable);
 }

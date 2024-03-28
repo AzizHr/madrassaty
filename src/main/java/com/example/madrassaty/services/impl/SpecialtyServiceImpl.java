@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +46,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     }
 
     @Override
-    public void delete(long id) throws NotFoundException {
+    public void delete(UUID id) throws NotFoundException {
         if(specialtyRepository.findById(id).isPresent()) {
             specialtyRepository.deleteById(id);
         }
@@ -53,7 +54,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     }
 
     @Override
-    public SpecialtyResponse findById(long id) throws NotFoundException {
+    public SpecialtyResponse findById(UUID id) throws NotFoundException {
         if(specialtyRepository.findById(id).isPresent()) {
             return modelMapper.map(specialtyRepository.findById(id).get(), SpecialtyResponse.class);
         }
@@ -61,7 +62,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     }
 
     @Override
-    public Page<SpecialtyResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+    public Page<SpecialtyResponse> findAllBySchoolId(UUID schoolId, Pageable pageable) {
         Page<Specialty> specialtyPage = specialtyRepository.findAllBySchoolId(schoolId, pageable);
 
         return new PageImpl<>(

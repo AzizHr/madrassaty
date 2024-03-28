@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class SchoolServiceImpl implements SchoolService {
@@ -33,7 +35,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public void delete(long id) throws NotFoundException {
+    public void delete(UUID id) throws NotFoundException {
         if(schoolRepository.findById(id).isPresent()) {
             schoolRepository.deleteById(id);
         }
@@ -41,7 +43,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public SchoolResponse findById(long id) throws NotFoundException {
+    public SchoolResponse findById(UUID id) throws NotFoundException {
         if(schoolRepository.findById(id).isPresent()) {
             return modelMapper.map(schoolRepository.findById(id).get(), SchoolResponse.class);
         }
@@ -49,7 +51,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public SchoolResponse findByManagerId(long managerId) throws NotFoundException {
+    public SchoolResponse findByManagerId(UUID managerId) throws NotFoundException {
         if(schoolRepository.findByManagerId(managerId).isPresent()) {
             return modelMapper.map(schoolRepository.findByManagerId(managerId).get(), SchoolResponse.class);
         }

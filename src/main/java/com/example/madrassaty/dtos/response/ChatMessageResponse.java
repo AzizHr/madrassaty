@@ -12,6 +12,6 @@ public class ChatMessageResponse {
     private long id;
     private String content;
     private ChatRoomDTO chatRoom;
-    private UserResponse sender;
-    private UserResponse receiver;
+    private ProfileResponse sender;
+    private ProfileResponse receiver;
 }

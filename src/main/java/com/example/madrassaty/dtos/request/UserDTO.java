@@ -11,13 +11,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class UserDTO {
 
-    private long id;
+    private UUID id;
     @NotEmpty(message = "firstname can't be empty")
     @NotNull(message = "firstname is required")
     private String firstname;

@@ -7,7 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface SubjectService extends GlobalService<SubjectResponse, SubjectDTO> {
-    Page<SubjectResponse> findAllBySchoolId(long schoolId, Pageable pageable);
+    Page<SubjectResponse> findAllBySchoolId(UUID schoolId, Pageable pageable);
 }

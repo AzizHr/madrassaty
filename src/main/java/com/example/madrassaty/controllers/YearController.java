@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/years")
@@ -36,14 +37,14 @@ public class YearController {
 
     @GetMapping("/{id}")
     public ResponseEntity<YearResponse> year(
-            @PathVariable long id)
+            @PathVariable UUID id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (yearService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id)
+    public ResponseEntity<String> delete(@PathVariable UUID id)
             throws NotFoundException {
         yearService.delete(id);
         return new ResponseEntity<>
@@ -51,7 +52,7 @@ public class YearController {
     }
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<List<YearResponse>> allBySchoolId(@PathVariable long schoolId) {
+    public ResponseEntity<List<YearResponse>> allBySchoolId(@PathVariable UUID schoolId) {
         return new ResponseEntity<>
                 (yearService.findAllBySchoolId(schoolId), HttpStatus.OK);
     }

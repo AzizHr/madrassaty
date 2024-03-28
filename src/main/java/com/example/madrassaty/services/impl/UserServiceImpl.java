@@ -1,7 +1,7 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.ChatUserDTO;
-import com.example.madrassaty.dtos.response.UserResponse;
+import com.example.madrassaty.dtos.response.ProfileResponse;
 import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.models.User;
@@ -21,30 +21,30 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
 
     @Override
-    public UserResponse connect(ChatUserDTO chatUserDTO) throws NotFoundException {
+    public ProfileResponse connect(ChatUserDTO chatUserDTO) throws NotFoundException {
         if(repository.findById(chatUserDTO.getId()).isPresent()) {
             User user = repository.findById(chatUserDTO.getId()).get();
             user.setStatus(StatusType.ONLINE);
-            return modelMapper.map(repository.save(user), UserResponse.class);
+            return modelMapper.map(repository.save(user), ProfileResponse.class);
         }
         throw new NotFoundException("No user found");
     }
 
     @Override
-    public UserResponse disconnect(ChatUserDTO chatUserDTO) throws NotFoundException {
+    public ProfileResponse disconnect(ChatUserDTO chatUserDTO) throws NotFoundException {
         if(repository.findById(chatUserDTO.getId()).isPresent()) {
             User user = repository.findById(chatUserDTO.getId()).get();
             user.setStatus(StatusType.ONLINE);
-            return modelMapper.map(repository.save(user), UserResponse.class);
+            return modelMapper.map(repository.save(user), ProfileResponse.class);
         }
         throw new NotFoundException("No user found");
     }
 
     @Override
-    public List<UserResponse> findConnectedUsers() {
+    public List<ProfileResponse> findConnectedUsers() {
         List<User> users = repository.findAllByStatus(StatusType.ONLINE);
         return users.stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
+                .map(user -> modelMapper.map(user, ProfileResponse.class))
                 .collect(Collectors.toList());
     }
 

@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeacherClassDTO {
     @NotNull(message = "teacherId is required")
-    private long teacherId;
+    private UUID teacherId;
     @NotNull(message = "classId is required")
-    private long classId;
+    private UUID classId;
 }

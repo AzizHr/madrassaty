@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class TeacherClassController {
 
     @DeleteMapping("/remove/teacher/from/class/{teacherId}/{classId}")
     public ResponseEntity<Map<String, String>> delete(
-            @PathVariable long teacherId,
-            @PathVariable long classId
+            @PathVariable UUID teacherId,
+            @PathVariable UUID classId
     ) throws NotFoundException {
         teacherClassService.delete(teacherId, classId);
         return ResponseEntity.ok(Map.of("message", "Teacher unassigned with success"));

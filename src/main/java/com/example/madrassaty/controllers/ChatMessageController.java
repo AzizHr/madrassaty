@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +39,8 @@ public class ChatMessageController {
     }
 
     @GetMapping("/api/messages/{senderId}/{receiverId}")
-    public ResponseEntity<List<ChatMessageResponse>> findChatMessages(@PathVariable long senderId,
-                                                                      @PathVariable long receiverId) {
+    public ResponseEntity<List<ChatMessageResponse>> findChatMessages(@PathVariable UUID senderId,
+                                                                      @PathVariable UUID receiverId) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderId, receiverId));
     }

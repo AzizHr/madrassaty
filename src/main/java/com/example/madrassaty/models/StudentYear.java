@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -15,8 +16,8 @@ import java.time.LocalDate;
 public class StudentYear {
 
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private LocalDate startsAt;
     private LocalDate endsAt;
     private String scholarYear;

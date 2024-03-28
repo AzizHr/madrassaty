@@ -2,10 +2,9 @@ package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.request.SubjectDTO;
 import com.example.madrassaty.dtos.response.SubjectResponse;
-import com.example.madrassaty.dtos.response.UserResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
-import com.example.madrassaty.models.Student;
 import com.example.madrassaty.models.Subject;
+import com.example.madrassaty.repositories.SchoolRepository;
 import com.example.madrassaty.repositories.SubjectRepository;
 import com.example.madrassaty.services.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,11 +22,13 @@ import java.util.stream.Collectors;
 public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
+    private final SchoolRepository schoolRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public SubjectResponse save(SubjectDTO subjectDTO) {
+    public SubjectResponse save(SubjectDTO subjectDTO) throws NotFoundException {
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
+        subject.setSchool(schoolRepository.findById(subjectDTO.getSchoolId()).orElseThrow(() -> new NotFoundException("No school found")));
         return modelMapper.map(subjectRepository.save(subject), SubjectResponse.class);
     }
 
@@ -40,7 +42,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void delete(long id) throws NotFoundException {
+    public void delete(UUID id) throws NotFoundException {
         if(subjectRepository.findById(id).isPresent()) {
             subjectRepository.deleteById(id);
         }
@@ -48,7 +50,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public SubjectResponse findById(long id) throws NotFoundException {
+    public SubjectResponse findById(UUID id) throws NotFoundException {
         if(subjectRepository.findById(id).isPresent()) {
             return modelMapper.map(subjectRepository.findById(id).get(), SubjectResponse.class);
         }
@@ -56,7 +58,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Page<SubjectResponse> findAllBySchoolId(long schoolId, Pageable pageable) {
+    public Page<SubjectResponse> findAllBySchoolId(UUID schoolId, Pageable pageable) {
         Page<Subject> subjectPage = subjectRepository.findAllBySchoolId(schoolId, pageable);
 
         return new PageImpl<>(

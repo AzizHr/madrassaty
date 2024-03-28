@@ -9,6 +9,6 @@ import lombok.*;
 @Builder
 public class ChatRoomResponse {
     private String id;
-    private UserResponse sender;
-    private UserResponse receiver;
+    private ProfileResponse sender;
+    private ProfileResponse receiver;
 }

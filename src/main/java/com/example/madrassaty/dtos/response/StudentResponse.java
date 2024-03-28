@@ -14,9 +14,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentResponse extends UserResponse {
+public class StudentResponse extends ProfileResponse {
     private SpecialtyDTO specialty;
-    private ClassDTO sClass;
+    private ClassDTO _class;
     private List<AbsenceDTO> absences;
     private List<StudentYearDTO> years;
 }

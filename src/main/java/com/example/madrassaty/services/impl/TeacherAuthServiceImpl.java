@@ -2,6 +2,7 @@ package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
+import com.example.madrassaty.repositories.UserRepository;
 import com.example.madrassaty.security.authenticators.TeacherAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.TeacherRegisterDTO;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class TeacherAuthServiceImpl implements TeacherAuthService {
 
     private final TeacherRepository teacherRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
@@ -44,7 +46,7 @@ public class TeacherAuthServiceImpl implements TeacherAuthService {
     @Override
     public AuthResponse register(TeacherRegisterDTO teacherRegisterDTO) throws IOException, EmailAlreadyInUseException {
 
-        if(teacherRepository.findTeacherByEmail(teacherRegisterDTO.getEmail()).isPresent()) {
+        if(userRepository.findByEmail(teacherRegisterDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyInUseException("This email is already in use");
         } else {
             Teacher teacher = modelMapper.map(teacherRegisterDTO, Teacher.class);

@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -17,7 +18,7 @@ import java.util.List;
 public class ChatRoom {
 
     @Id
-    private String id;
+    private UUID id;
     @ManyToOne
     private User sender;
     @ManyToOne

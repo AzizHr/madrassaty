@@ -1,7 +1,7 @@
 package com.example.madrassaty.controllers;
 
 import com.example.madrassaty.dtos.request.ChatUserDTO;
-import com.example.madrassaty.dtos.response.UserResponse;
+import com.example.madrassaty.dtos.response.ProfileResponse;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class UserController {
 
     @MessageMapping("/user.connect")
     @SendTo("/user/public")
-    public UserResponse addUser(
+    public ProfileResponse addUser(
             @Payload ChatUserDTO user
     ) throws NotFoundException {
         return userService.connect(user);
@@ -30,14 +30,14 @@ public class UserController {
 
     @MessageMapping("/user.disconnect")
     @SendTo("/user/public")
-    public UserResponse disconnectUser(
+    public ProfileResponse disconnectUser(
             @Payload ChatUserDTO user
     ) throws NotFoundException {
         return userService.disconnect(user);
     }
 
     @GetMapping("/api/users")
-    public ResponseEntity<List<UserResponse>> connectedUsers() {
+    public ResponseEntity<List<ProfileResponse>> connectedUsers() {
         return ResponseEntity.ok(userService.findConnectedUsers());
     }
 }

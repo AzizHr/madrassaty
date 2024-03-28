@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<?> allBySchoolId(@PathVariable long schoolId, Pageable pageable) {
+    public ResponseEntity<?> allBySchoolId(@PathVariable UUID schoolId, Pageable pageable) {
         if(teacherService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No teachers found"), HttpStatus.OK);
         }
@@ -27,7 +28,7 @@ public class TeacherController {
     }
 
     @GetMapping("/class/{classId}")
-    public ResponseEntity<?> allByClassId(@PathVariable long classId, Pageable pageable) {
+    public ResponseEntity<?> allByClassId(@PathVariable UUID classId, Pageable pageable) {
         if(teacherService.findAllByClassId(classId, pageable).isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No teachers found"), HttpStatus.OK);
         }

@@ -8,6 +8,7 @@ import com.example.madrassaty.services.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +18,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final UserRepository userRepository;
 
     @Override
-    public Optional<String> getChatRoomId(
-            long senderId,
-            long receiverId
+    public Optional<UUID> getChatRoomId(
+            UUID senderId,
+            UUID receiverId
     ) throws NotFoundException {
         if(chatRoomRepository.findBySenderIdAndReceiverId(senderId, receiverId).isPresent()) {
             ChatRoom chatRoom = chatRoomRepository.findBySenderIdAndReceiverId(senderId, receiverId).get();
@@ -31,8 +32,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
 
     @Override
-    public String createChatId(long senderId, long receiverId) throws NotFoundException {
-        var chatId = String.format("%s_%s", senderId, receiverId);
+    public UUID createChatId(UUID senderId, UUID receiverId) throws NotFoundException {
+        UUID chatId = UUID.randomUUID();
+        chatId = UUID.fromString(senderId.toString()+'_'+receiverId.toString());
 
         ChatRoom senderRecipient = ChatRoom
                 .builder()

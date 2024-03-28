@@ -7,6 +7,7 @@ import com.example.madrassaty.models.Class;
 import com.example.madrassaty.models.Specialty;
 import com.example.madrassaty.repositories.ClassRepository;
 import com.example.madrassaty.repositories.SpecialtyRepository;
+import com.example.madrassaty.repositories.UserRepository;
 import com.example.madrassaty.security.authenticators.StudentAuthenticator;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.StudentRegisterDTO;
@@ -28,6 +29,7 @@ import java.io.IOException;
 public class StudentAuthServiceImpl implements StudentAuthService {
 
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
     private final SpecialtyRepository specialtyRepository;
     private final ClassRepository classRepository;
     private final PasswordEncoder passwordEncoder;
@@ -44,14 +46,14 @@ public class StudentAuthServiceImpl implements StudentAuthService {
         StudentAuthenticator studentAuthenticator = new StudentAuthenticator(student);
         String jwtToken = jwtService.generateToken(studentAuthenticator);
         AuthResponse authResponse = modelMapper.map(student, AuthResponse.class);
-        authResponse.setToken(jwtToken);
+        authResponse.setAccessToken(jwtToken);
         return authResponse;
     }
 
     @Override
     public AuthResponse register(StudentRegisterDTO studentRegisterDTO) throws IOException, NotFoundException, EmailAlreadyInUseException {
 
-        if(studentRepository.findStudentByEmail(studentRegisterDTO.getEmail()).isPresent()) {
+        if(userRepository.findByEmail(studentRegisterDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyInUseException("This email is already in use");
         } else {
             Student student = modelMapper.map(studentRegisterDTO, Student.class);
@@ -72,7 +74,7 @@ public class StudentAuthServiceImpl implements StudentAuthService {
                     StudentAuthenticator studentAuthenticator = new StudentAuthenticator(student);
                     String jwtToken = jwtService.generateToken(studentAuthenticator);
                     AuthResponse authResponse = modelMapper.map(student, AuthResponse.class);
-                    authResponse.setToken(jwtToken);
+                    authResponse.setAccessToken(jwtToken);
                     return authResponse;
                 }
                 throw new NotFoundException("No class found");

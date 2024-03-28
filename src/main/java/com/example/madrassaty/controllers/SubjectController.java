@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/subjects")
@@ -37,14 +38,14 @@ public class SubjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SubjectResponse> subject(
-            @PathVariable long id)
+            @PathVariable UUID id)
             throws NotFoundException {
         return new ResponseEntity<>
                 (subjectService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id)
+    public ResponseEntity<String> delete(@PathVariable UUID id)
             throws NotFoundException {
         subjectService.delete(id);
         return new ResponseEntity<>
@@ -52,7 +53,7 @@ public class SubjectController {
     }
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<?> allBySchoolId(@PathVariable long schoolId, Pageable pageable) {
+    public ResponseEntity<?> allBySchoolId(@PathVariable UUID schoolId, Pageable pageable) {
         if(subjectService.findAllBySchoolId(schoolId, pageable).isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No subjects found"), HttpStatus.OK);
         }

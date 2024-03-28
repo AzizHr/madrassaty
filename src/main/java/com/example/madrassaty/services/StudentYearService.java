@@ -7,7 +7,8 @@ import com.example.madrassaty.models.Student;
 import com.example.madrassaty.models.StudentYear;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface StudentYearService extends GlobalService<StudentYearResponse, StudentYearDTO> {
-    List<StudentYearResponse> findAllByStudentId(long studentId);
+    List<StudentYearResponse> findAllByStudentId(UUID studentId);
 }

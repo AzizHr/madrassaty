@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -14,12 +15,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AbsenceResponse {
 
-    private long id;
+    private UUID id;
     private LocalDate date;
     private int duration;
     private DurationType durationType;
     private String reason;
     private boolean isJustified;
-    private UserResponse student;
+    private ProfileResponse student;
 
 }

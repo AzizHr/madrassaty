@@ -3,6 +3,7 @@ package com.example.madrassaty.controllers;
 import com.example.madrassaty.dtos.request.AuthRequestDTO;
 import com.example.madrassaty.dtos.request.ManagerRegisterDTO;
 import com.example.madrassaty.dtos.response.AuthResponse;
+import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.exceptions.NotFoundException;
 import com.example.madrassaty.services.ManagerAuthService;
 import jakarta.validation.Valid;
@@ -27,7 +28,7 @@ public class ManagerAuthController {
 
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AuthResponse> register(@Valid @ModelAttribute ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException {
+    public ResponseEntity<AuthResponse> register(@Valid @ModelAttribute ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException, EmailAlreadyInUseException {
         return ResponseEntity.ok(managerAuthService.register(managerRegisterDTO));
     }
 

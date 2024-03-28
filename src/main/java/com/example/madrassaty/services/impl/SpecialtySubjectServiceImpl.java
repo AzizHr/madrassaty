@@ -10,6 +10,8 @@ import com.example.madrassaty.services.SpecialtySubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class SpecialtySubjectServiceImpl implements SpecialtySubjectService {
@@ -44,7 +46,7 @@ public class SpecialtySubjectServiceImpl implements SpecialtySubjectService {
     }
 
     @Override
-    public void delete(long specialtyId, long subjectId) throws NotFoundException {
+    public void delete(UUID specialtyId, UUID subjectId) throws NotFoundException {
         SpecialtySubjectId specialtySubjectId = new SpecialtySubjectId();
         specialtySubjectId.setSpecialtyId(specialtyId);
         specialtySubjectId.setSubjectId(subjectId);

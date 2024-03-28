@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -12,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class YearResponse {
 
-    private long id;
+    private UUID id;
     private String year;
     private SchoolDTO school;
 

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AbsenceDTO {
 
-    private long id;
+    private UUID id;
     @NotNull(message = "duration is required")
     private int duration;
     private DurationType durationType;
@@ -25,6 +26,6 @@ public class AbsenceDTO {
     @NotNull(message = "isJustified is required")
     private boolean isJustified;
     @NotNull(message = "studentId is required")
-    private long studentId;
+    private UUID studentId;
 
 }
