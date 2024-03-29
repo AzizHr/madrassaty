@@ -10,4 +10,6 @@ import java.util.UUID;
 
 public interface SchoolService extends GlobalService<SchoolResponse, SchoolDTO> {
     SchoolResponse findByManagerId(UUID managerId) throws NotFoundException;
+    SchoolResponse findByStudentId(UUID studentId);
+    SchoolResponse findByTeacherId(UUID teacherId);
 }
