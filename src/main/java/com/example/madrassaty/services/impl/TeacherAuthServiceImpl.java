@@ -1,5 +1,7 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.dtos.response.RegisterResponse;
+import com.example.madrassaty.dtos.response.UserResponse;
 import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.repositories.UserRepository;
@@ -38,13 +40,13 @@ public class TeacherAuthServiceImpl implements TeacherAuthService {
 
         TeacherAuthenticator teacherAuthenticator = new TeacherAuthenticator(teacher);
         String jwtToken = jwtService.generateToken(teacherAuthenticator);
-        AuthResponse authResponse = modelMapper.map(teacher, AuthResponse.class);
-        authResponse.setToken(jwtToken);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setAccessToken(jwtToken);
         return authResponse;
     }
 
     @Override
-    public AuthResponse register(TeacherRegisterDTO teacherRegisterDTO) throws IOException, EmailAlreadyInUseException {
+    public RegisterResponse register(TeacherRegisterDTO teacherRegisterDTO) throws IOException, EmailAlreadyInUseException {
 
         if(userRepository.findByEmail(teacherRegisterDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyInUseException("This email is already in use");
@@ -58,11 +60,10 @@ public class TeacherAuthServiceImpl implements TeacherAuthService {
                 teacher.setImage(imageUrl);
             }
             teacherRepository.save(teacher);
-            TeacherAuthenticator teacherAuthenticator = new TeacherAuthenticator(teacher);
-            String jwtToken = jwtService.generateToken(teacherAuthenticator);
-            AuthResponse authResponse = modelMapper.map(teacher, AuthResponse.class);
-            authResponse.setToken(jwtToken);
-            return authResponse;
+            RegisterResponse registerResponse = new RegisterResponse();
+            registerResponse.setUserResponse(modelMapper.map(teacher, UserResponse.class));
+            registerResponse.setMessage("Teacher account was created with success");
+            return registerResponse;
         }
     }
 }

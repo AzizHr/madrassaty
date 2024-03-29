@@ -1,8 +1,8 @@
 package com.example.madrassaty.controllers;
 
-import com.example.madrassaty.dtos.response.ManagerResponse;
-import com.example.madrassaty.dtos.response.StudentResponse;
-import com.example.madrassaty.dtos.response.TeacherResponse;
+import com.example.madrassaty.dtos.response.ManagerProfileResponse;
+import com.example.madrassaty.dtos.response.StudentProfileResponse;
+import com.example.madrassaty.dtos.response.TeacherProfileResponse;
 import com.example.madrassaty.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,27 +25,27 @@ public class LoggedInUserInfoController {
 
     @GetMapping("/student")
     @PreAuthorize("hasAuthority('STUDENT')")
-    public ResponseEntity<StudentResponse> getLoggedInStudent() {
+    public ResponseEntity<StudentProfileResponse> getLoggedInStudent() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         System.out.println(userRepository.findByEmail(email));
-        return ResponseEntity.ok(modelMapper.map(userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No student found")), StudentResponse.class));
+        return ResponseEntity.ok(modelMapper.map(userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No student found")), StudentProfileResponse.class));
     }
 
     @GetMapping("/teacher")
     @PreAuthorize("hasAuthority('TEACHER')")
-    public ResponseEntity<TeacherResponse> getLoggedInTeacher() {
+    public ResponseEntity<TeacherProfileResponse> getLoggedInTeacher() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return ResponseEntity.ok(modelMapper.map(userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No teacher found")), TeacherResponse.class));
+        return ResponseEntity.ok(modelMapper.map(userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No teacher found")), TeacherProfileResponse.class));
     }
 
     @GetMapping("/manager")
     @PreAuthorize("hasAuthority('MANAGER')")
-    public ResponseEntity<ManagerResponse> getLoggedInManager() {
+    public ResponseEntity<ManagerProfileResponse> getLoggedInManager() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return ResponseEntity.ok(modelMapper.map(userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No manager found")), ManagerResponse.class));
+        return ResponseEntity.ok(modelMapper.map(userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No manager found")), ManagerProfileResponse.class));
     }
 
 }

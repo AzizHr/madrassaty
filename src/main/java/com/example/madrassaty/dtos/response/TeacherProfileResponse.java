@@ -1,6 +1,7 @@
 package com.example.madrassaty.dtos.response;
 
-
+import com.example.madrassaty.dtos.request.SubjectDTO;
+import com.example.madrassaty.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterResponse {
-    private UserResponse userResponse;
-    private String message;
+public class TeacherProfileResponse extends User {
+    private SubjectDTO subject;
 }

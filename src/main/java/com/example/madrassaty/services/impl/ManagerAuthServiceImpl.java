@@ -1,5 +1,7 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.dtos.response.RegisterResponse;
+import com.example.madrassaty.dtos.response.UserResponse;
 import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.repositories.UserRepository;
@@ -41,13 +43,13 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
 
         ManagerAuthenticator authenticatedManager = new ManagerAuthenticator(manager);
         String jwtToken = jwtService.generateToken(authenticatedManager);
-        AuthResponse authResponse = modelMapper.map(manager, AuthResponse.class);
-        authResponse.setToken(jwtToken);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setAccessToken(jwtToken);
         return authResponse;
     }
 
     @Override
-    public AuthResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException, EmailAlreadyInUseException {
+    public RegisterResponse register(ManagerRegisterDTO managerRegisterDTO) throws NotFoundException, IOException, EmailAlreadyInUseException {
 
         if(userRepository.findByEmail(managerRegisterDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyInUseException("This email is already in use");
@@ -62,11 +64,10 @@ public class ManagerAuthServiceImpl implements ManagerAuthService {
                 manager.setImage(imageUrl);
             }
             managerRepository.save(manager);
-            ManagerAuthenticator managerAuthenticator = new ManagerAuthenticator(manager);
-            String jwtToken = jwtService.generateToken(managerAuthenticator);
-            AuthResponse authResponse = modelMapper.map(manager, AuthResponse.class);
-            authResponse.setToken(jwtToken);
-            return authResponse;
+            RegisterResponse registerResponse = new RegisterResponse();
+            registerResponse.setUserResponse(modelMapper.map(manager, UserResponse.class));
+            registerResponse.setMessage("Your account created with success");
+            return registerResponse;
         }
     }
 }

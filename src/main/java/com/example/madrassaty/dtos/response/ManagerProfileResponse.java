@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ManagerResponse extends User {
+public class ManagerProfileResponse extends User {
     private SchoolDTO school;
 }

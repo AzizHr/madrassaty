@@ -1,6 +1,7 @@
 package com.example.madrassaty.services.impl;
 
 import com.example.madrassaty.dtos.response.ProfileResponse;
+import com.example.madrassaty.dtos.response.StudentResponse;
 import com.example.madrassaty.models.Student;
 import com.example.madrassaty.repositories.ClassRepository;
 import com.example.madrassaty.repositories.StudentRepository;
@@ -24,12 +25,12 @@ public class StudentServiceImpl implements StudentService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<ProfileResponse> findAllBySchoolId(UUID schoolId, Pageable pageable) {
+    public Page<StudentResponse> findAllBySchoolId(UUID schoolId, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findAllBySchoolId(schoolId, pageable);
 
         return new PageImpl<>(
                 studentPage.getContent().stream()
-                        .map(student -> modelMapper.map(student, ProfileResponse.class))
+                        .map(student -> modelMapper.map(student, StudentResponse.class))
                         .collect(Collectors.toList()),
                 studentPage.getPageable(),
                 studentPage.getTotalElements()
@@ -37,12 +38,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Page<ProfileResponse> findAllByClassId(UUID classId, Pageable pageable) {
+    public Page<StudentResponse> findAllByClassId(UUID classId, Pageable pageable) {
         Page<Student> studentPage = studentRepository.findAllBy_class_Id(classId, pageable);
 
         return new PageImpl<>(
                 studentPage.getContent().stream()
-                        .map(student -> modelMapper.map(student, ProfileResponse.class))
+                        .map(student -> modelMapper.map(student, StudentResponse.class))
                         .collect(Collectors.toList()),
                 studentPage.getPageable(),
                 studentPage.getTotalElements()

@@ -5,9 +5,9 @@ import com.example.madrassaty.exceptions.NotFoundException;
 
 import java.io.IOException;
 
-public interface AuthService<T, S, R> {
+public interface AuthService<R1, R2, P1, P2> {
 
-    T login(S s);
-    T register(R r) throws NotFoundException, IOException, EmailAlreadyInUseException;
+    R1 login(P1 p1);
+    R2 register(P2 p2) throws NotFoundException, IOException, EmailAlreadyInUseException;
 
 }

@@ -1,5 +1,7 @@
 package com.example.madrassaty.services.impl;
 
+import com.example.madrassaty.dtos.response.RegisterResponse;
+import com.example.madrassaty.dtos.response.UserResponse;
 import com.example.madrassaty.enums.StatusType;
 import com.example.madrassaty.exceptions.EmailAlreadyInUseException;
 import com.example.madrassaty.exceptions.NotFoundException;
@@ -45,13 +47,13 @@ public class StudentAuthServiceImpl implements StudentAuthService {
 
         StudentAuthenticator studentAuthenticator = new StudentAuthenticator(student);
         String jwtToken = jwtService.generateToken(studentAuthenticator);
-        AuthResponse authResponse = modelMapper.map(student, AuthResponse.class);
+        AuthResponse authResponse = new AuthResponse();
         authResponse.setAccessToken(jwtToken);
         return authResponse;
     }
 
     @Override
-    public AuthResponse register(StudentRegisterDTO studentRegisterDTO) throws IOException, NotFoundException, EmailAlreadyInUseException {
+    public RegisterResponse register(StudentRegisterDTO studentRegisterDTO) throws IOException, NotFoundException, EmailAlreadyInUseException {
 
         if(userRepository.findByEmail(studentRegisterDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyInUseException("This email is already in use");
@@ -71,11 +73,10 @@ public class StudentAuthServiceImpl implements StudentAuthService {
                     student.setSpecialty(specialty);
                     student.set_class(aClass);
                     studentRepository.save(student);
-                    StudentAuthenticator studentAuthenticator = new StudentAuthenticator(student);
-                    String jwtToken = jwtService.generateToken(studentAuthenticator);
-                    AuthResponse authResponse = modelMapper.map(student, AuthResponse.class);
-                    authResponse.setAccessToken(jwtToken);
-                    return authResponse;
+                    RegisterResponse registerResponse = new RegisterResponse();
+                    registerResponse.setUserResponse(modelMapper.map(student, UserResponse.class));
+                    registerResponse.setMessage("Student account was created with success");
+                    return registerResponse;
                 }
                 throw new NotFoundException("No class found");
             }
