@@ -51,6 +51,22 @@ public class SchoolController {
                 (schoolService.findByManagerId(managerId), HttpStatus.OK);
     }
 
+    @GetMapping("/by/student/{studentId}")
+    public ResponseEntity<SchoolResponse> byStudent(
+            @PathVariable UUID studentId)
+            throws NotFoundException {
+        return new ResponseEntity<>
+                (schoolService.findByStudentId(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/by/teacher/{teacherId}")
+    public ResponseEntity<SchoolResponse> byTeacher(
+            @PathVariable UUID teacherId)
+            throws NotFoundException {
+        return new ResponseEntity<>
+                (schoolService.findByTeacherId(teacherId), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id)
             throws NotFoundException {
