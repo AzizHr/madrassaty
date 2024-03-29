@@ -57,4 +57,20 @@ public class SchoolServiceImpl implements SchoolService {
         }
         throw new NotFoundException("No school found");
     }
+
+    @Override
+    public SchoolResponse findByStudentId(UUID studentId) throws NotFoundException {
+        if(schoolRepository.findByStudentId(studentId).isPresent()) {
+            return modelMapper.map(schoolRepository.findByStudentId(studentId).get(), SchoolResponse.class);
+        }
+        throw new NotFoundException("No school found");
+    }
+
+    @Override
+    public SchoolResponse findByTeacherId(UUID teacherId) throws NotFoundException {
+        if(schoolRepository.findByTeacherId(teacherId).isPresent()) {
+            return modelMapper.map(schoolRepository.findByTeacherId(teacherId).get(), SchoolResponse.class);
+        }
+        throw new NotFoundException("No school found");
+    }
 }
