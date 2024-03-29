@@ -15,4 +15,7 @@ public interface SchoolRepository extends JpaRepository<School, UUID> {
 
     @Query(value = "SELECT * FROM school WHERE id IN (SELECT school_id FROM class WHERE id IN (SELECT class_id FROM teacher_class WHERE teacher_id = ?))", nativeQuery = true)
     Optional<School> findByTeacherId(UUID teacherId);
+
+    @Query(value = "SELECT * FROM school WHERE id IN (SELECT school_id FROM class WHERE id IN (SELECT class_id FROM users WHERE id = ?))", nativeQuery = true)
+    Optional<School> findByStudentId(UUID studentId);
 }
